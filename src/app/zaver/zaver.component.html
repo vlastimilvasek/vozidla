@@ -1,0 +1,56 @@
+<div *ngIf="data" id="srovnani">
+  <!-- <h3 class="head-title">{{ 'ZAVER.TITLE' | translate }}</h3> -->
+
+  <div style="max-width: 50rem;" class="table card mx-auto mb-3">
+    <div class="card-body p-0">
+      <div class="row partner py-3 align-items-center">
+        <div class="col-auto">
+          <i style="float: left;" class="fa-4x fa-fw fas text-success fa-check"></i>
+        </div>
+        <div class="col">
+          <h3 class="vagl card-title">{{ 'ZAVER.CELL1.TITLE' | translate }}</h3>
+          <p class="card-text" [innerHTML]="'ZAVER.CELL1.TEXT' | translate"></p>
+        </div>
+      </div>
+      <!--
+      <div class="row partner py-3 align-items-center">
+        <div class="col-auto">
+          <i style="float: left;" class="fa-3x fa-fw fas fa-spinner fa-spin"></i>
+        </div>
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.CELL2.TITLE' | translate }}</h5>
+          <p class="card-text" [innerHTML]="'ZAVER.CELL2.TEXT' | translate"></p>
+        </div>
+      </div>
+      -->
+      <div class="row partner py-3 align-items-center">
+        <div class="col-auto">
+          <i style="float: left;" class="fa-2x fa-fw fas fa-file-alt"></i>
+        </div>
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.CELL3.TITLE' | translate }}</h5>
+          <p class="card-text" [innerHTML]="'ZAVER.CELL3.TEXT' | translate:{email: data.pojistnik.email}"></p>
+        </div>
+      </div>
+      <div class="row partner py-3 align-items-center">
+        <div class="col-auto">
+          <i style="float: left;" class="fa-2x fa-fw fas fa-envelope"></i>
+        </div>
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.CELL4.TITLE' | translate }}</h5>
+          <p class="card-text" [innerHTML]="'ZAVER.CELL4.TEXT' | translate"></p>
+        </div>
+      </div>
+      <div class="row partner py-3 align-items-center">
+        <div class="col-auto">
+          <i style="float: left;" class="fa-2x fa-fw icon shape-woman93"></i>
+        </div>
+        <div class="col">
+          <h5 class="vagl card-title">{{ 'ZAVER.CELL5.TITLE' | translate }}</h5>
+          <p class="card-text" [innerHTML]="'ZAVER.CELL5.TEXT' | translate"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

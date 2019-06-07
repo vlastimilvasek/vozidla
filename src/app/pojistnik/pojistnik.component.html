@@ -1,0 +1,209 @@
+<fieldset ngModelGroup="pojistnik">
+<div class="row">
+	<div class="{{ layout.grid.column }}">
+
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.POJISTNIK.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.POJISTNIK.HINT' | translate }}">
+				{{ 'OSOBA.POJISTNIK.LABEL' | translate }}
+			</label>		
+			<div class="{{ layout.grid.input }}"> 
+				<ngx-select
+					name = "typ" class="" #typ="ngModel"
+					placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+				    [items]="lists.pojistnik"
+				    [allowClear]="false"
+				    [(ngModel)]="data.typ" 
+				    required>
+				</ngx-select>			
+			</div>
+			<small [hidden]="typ.valid || (typ.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>		
+		</div>
+		<div class="form-group row" *ngIf="data.typ > '2'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.IC.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.IC.HINT' | translate }}">
+				{{ 'OSOBA.IC.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+					<input name="ic" class="form-control" type="text"
+						placeholder="{{ 'OSOBA.IC.PLACEHOLDER' | translate }}"
+						[(ngModel)]="data.ic" #ic="ngModel" IC required />					
+			</div>
+			<small [hidden]="ic.valid || (ic.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'OSOBA.IC.REQUIRED' | translate }}
+			</small>
+			<div class="{{ layout.grid.input }} {{ layout.grid.offset }} mt-3">			
+				<div class="custom-control custom-checkbox col">
+					<input class="custom-control-input" name="platce_dph" id="platce_dph" [(ngModel)]="data.platce_dph" type="checkbox" />
+					<label class="custom-control-label" for="platce_dph"
+						placement="bottom"
+						triggers="mouseenter:mouseleave"
+						popoverTitle="{{ 'OSOBA.PLATCE_DPH.LABEL' | translate }}"		
+						popover="{{ 'OSOBA.PLATCE_DPH.HINT' | translate }}">
+						{{ 'OSOBA.PLATCE_DPH.LABEL' | translate }}
+					</label>
+				</div>
+			</div>		
+		</div>
+		<div class="form-group row" *ngIf="data.typ < '4'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.TITUL.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.TITUL.HINT' | translate }}">
+				{{ 'OSOBA.TITUL.LABEL' | translate }}
+			</label>
+			<div class="col-sm-3 col-xs-5">
+				<input name="titul" class="form-control" type="text" placeholder="{{ 'OSOBA.TITUL.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.titul" #titul="ngModel" />
+			</div>
+			<div class="col-sm-1 col-xs-1">/</div>
+			<div class="col-sm-3 col-xs-5">
+				<input name="titul_za" class="form-control" type="text" placeholder="{{ 'OSOBA.TITUL_ZA.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.titul_za" #titul_za="ngModel" />
+			</div>			
+			<small [hidden]="titul.valid || (titul.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>
+		<div class="form-group row" *ngIf="data.typ === '4'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.SPOLECNOST.LABEL' | translate }}"
+				popover="{{ 'OSOBA.SPOLECNOST.HINT' | translate }}">
+				{{ 'OSOBA.SPOLECNOST.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="spolecnost" class="form-control" type="text" placeholder="{{ 'OSOBA.SPOLECNOST.PLACEHOLDER' | translate }}" 
+					[(ngModel)]="data.spolecnost" #spolecnost="ngModel" required />
+			</div>
+			<small [hidden]="spolecnost.valid || (spolecnost.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>			
+		</div>
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.JMENO.LABEL' | translate }}"
+				popover="{{ 'OSOBA.JMENO.HINT' | translate }}">
+				{{ 'OSOBA.JMENO.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="jmeno" class="form-control" type="text" placeholder="{{ 'OSOBA.JMENO.PLACEHOLDER' | translate }}" 
+					[(ngModel)]="data.jmeno" #jmeno="ngModel" required />
+			</div>
+			<small [hidden]="jmeno.valid || (jmeno.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>			
+		</div>
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.PRIJMENI.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.PRIJMENI.HINT' | translate }}">
+				{{ 'OSOBA.PRIJMENI.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="prijmeni" class="form-control" type="text" placeholder="{{ 'OSOBA.PRIJMENI.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.prijmeni" #prijmeni="ngModel" required />
+			</div>
+			<small [hidden]="prijmeni.valid || (prijmeni.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>			
+		<div class="form-group row" *ngIf="data.typ < '4'">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.RC.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.RC.HINT' | translate }}">
+				{{ 'OSOBA.RC.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="rc" class="form-control" type="text" placeholder="{{ 'OSOBA.RC.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.rc" #rc="ngModel" RC required />
+			</div>
+			<small [hidden]="rc.valid || (rc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'OSOBA.RC.REQUIRED' | translate }}
+			</small>
+		</div>		
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.EMAIL.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.EMAIL.HINT' | translate }}">
+				{{ 'OSOBA.EMAIL.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="email" class="form-control" type="email" placeholder="{{ 'OSOBA.EMAIL.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.email" #email="ngModel" email required />
+			</div>
+			<small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.TELEFON.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.TELEFON.HINT' | translate }}">
+				{{ 'OSOBA.TELEFON.LABEL' | translate }}
+			</label>
+			<div class="{{ layout.grid.input }}">
+				<input name="telefon" class="form-control" type="text" placeholder="{{ 'OSOBA.TELEFON.PLACEHOLDER' | translate }}"
+					[(ngModel)]="data.telefon" #telefon="ngModel" telefonFormat pattern="[0-9]{9}" required />
+			</div>
+			<small [hidden]="telefon.valid || (telefon.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>
+		</div>		
+
+	</div>
+	<div class="{{ layout.grid.column }}">
+   		<app-adresa [prefix]="adresy.pojistnik" [(data)]="data.adresa" [layout]="layout" [submitted]="submitted"></app-adresa>
+
+		<div class="form-group row">
+			<label class="col-sm-5 col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"
+				popoverTitle="{{ 'OSOBA.KADRESA.LABEL' | translate }}"		
+				popover="{{ 'OSOBA.KADRESA.HINT' | translate }}">
+				{{ 'OSOBA.KADRESA.LABEL' | translate }}
+			</label>
+			<div class="col-sm-7 pt-1">   		
+				<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+				  <label class="btn btn-outline-primary" [class.active]="data.kadresa === true">
+				    <input name="kadresa" [(ngModel)]="data.kadresa" [value]="true" type="radio" required />
+				    {{ 'FORM.ANO' | translate }}
+				  </label>
+				  <label class="btn btn-outline-primary" [class.active]="data.kadresa === false">
+				    <input name="kadresa" [(ngModel)]="data.kadresa" [value]="false" type="radio" />
+				    {{ 'FORM.NE' | translate }}
+				  </label>
+				</div>
+			</div>   		
+		</div>
+		
+		<app-adresa [prefix]="adresy.korespond" [(data)]="data.kor_adresa" [layout]="layout" [submitted]="submitted" *ngIf="data.kadresa === true" ></app-adresa>   		
+	</div>
+</div>
+</fieldset>
+<!--
+<div class="alert alert-info" role="alert">
+	<h3>Lokální data - pojistnik</h3>
+	<pre>{{ data | json }}</pre>
+</div>
+-->

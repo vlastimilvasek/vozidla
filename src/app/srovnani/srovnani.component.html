@@ -1,0 +1,230 @@
+<div id="srovnani" *ngIf="offers.length">
+
+	<div *ngIf="data.pojisteni == 'POV' && offers.length">
+        <alert type="info" *ngIf="layout.prvniNapoveda" [dismissOnTimeout]="8000" [dismissible]="true">
+            <i class="fas fa-chevron-down"></i> {{ 'SROVNANI.COLLAPSEHINT' | translate }}
+        </alert> 
+		<!-- šablona odpovědnost občanská : detail -->
+		<div [@list]="offers.length" *ngIf="!layout.table">
+			<div @items *ngFor="let r of offers" class="card mb-3" [class.selected]="data.produkt === r.id">
+			</div>
+		</div>
+
+		<!-- šablona odpovědnost občanská : tabulka -->
+		<div [@list]="offers.length" *ngIf="layout.table" class="card table">
+			<div class="card-header">
+				<div class="row align-items-center">
+					<div class="col-4 col-sm-5 col-lg-2 pl-0 pr-0 row hidden-md-down">
+						<div class="col-12">{{ 'SROVNANI.PARTNER' | translate }}</div>
+					</div>
+					<div class="col-12 col-lg-7 order-3 order-lg-2 pl-0 pr-0 row">
+						<div class="col"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.PRODUKT.HINT' | translate }}">
+							{{ 'SROVNANI.PRODUKT.TITLE' | translate }}</div>
+						<div class="col text-right hidden-sm-down"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.ZDR.HINT' | translate }}">
+							{{ 'SROVNANI.ZDR.TITLE' | translate }}</div>
+                        <div class="col text-right hidden-sm-down"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.MAJ.HINT' | translate }}">
+							{{ 'SROVNANI.MAJ.TITLE' | translate }}</div>
+						<div class="col text-center hidden-sm-down"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.INFO.HINT' | translate }}">
+							{{ 'SROVNANI.INFO.TITLE' | translate }}</div>							
+					</div>
+					<div class="col-8 col-sm-7 col-lg-3 order-2 order-lg-3 pl-0 pr-0 row hidden-md-down">
+						<div class="text-center ml-4">{{ 'SROVNANI.SPLATKA' | translate }}: {{ ('TEXTY.PLATBA.' + data.platba) | translate }}</div>
+					</div>						
+				</div>
+			</div>
+			<div class="card-body">
+                <div @items *ngFor="let r of offers" class="row partner align-items-center" [class.selected]="r.id === data.produkt"
+                    (click)="layout.produktCollapsed[r.id] = !layout.produktCollapsed[r.id]"
+                    [attr.aria-expanded]="!layout.produktCollapsed[r.id]" aria-controls="produktCollapsed"
+                >
+					<div class="col-4 col-sm-5 col-lg-2 pl-0 pr-0 row align-items-center">
+						<div class="col-12">
+                        	<img src="{{ LOGA[r.pojistovna] }}" class="img-fluid" style="max-height:60px;" alt="{{ r.pojistovna }}"/>
+                        </div>
+					</div>
+					<div class="col-12 col-lg-7 order-3 order-lg-2 pl-0 pr-0 row align-items-center">
+                        <div class="col vag"><span [outerHTML]="r.produkt"></span></div>
+                        <div class="col text-right hidden-sm-down"><span [outerHTML]="r?.param_obj?.zdr?.hodnota| menaFormat"></span></div>
+                        <div class="col text-right hidden-sm-down"><span [outerHTML]="r?.param_obj?.maj?.hodnota| menaFormat"></span></div>
+                        <div class="col text-center"><i class="fas fa-chevron-right"></i>&nbsp;<small>{{ 'SROVNANI.INFO.SHOW' | translate }}</small></div>
+					</div>								
+					<div class="col-8 col-sm-7 col-lg-3 order-2 order-lg-3 p-0 row align-items-center">
+						<div class="col text-right pl-0 cena vag"><span *ngIf="r.platby[data.platba] > 0">{{ r.platby[data.platba] | telefonFormat }}&nbsp;{{ 'FORM.KC' | translate }}</span></div>
+						<div class="col text-right">
+							<button class="btn btn-sm btn-success pull-right" (click)="vyberProdukt.emit(r.id);">
+								{{ 'FORM.BUTTONS.SJEDNAT' | translate }}&nbsp;<i class="fa fa-chevron-right"></i>
+							</button>
+						</div>
+                    </div>
+					<div id="produktCollapsed_{{r.id}}" [collapse]="layout.produktCollapsed[r.id]" class="col-12 order-4">
+						<hr class="my-0" />
+						<div class="row mb-2">
+							<div class="col-lg-5 col-md-6 order-2 order-md-0 pl-0">
+                                <div class="mt-4">
+                                    <div class="clearfix">{{ r.param_obj.asn.popis }}:<span class="float-right" [innerHTML]="r.param_obj.asn | menaFormatInfo:r.param_obj.asn.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.asp.popis }}:<span class="float-right" [innerHTML]="r.param_obj.asp | menaFormatInfo:r.param_obj.asp.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.nv.popis }}:<span class="float-right" [innerHTML]="r.param_obj.nv | menaFormatInfo:r.param_obj.nv.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.pa.popis }}:<span class="float-right" [innerHTML]="r.param_obj.pa | menaFormatInfo:r.param_obj.pa.hodnota"></span></div>
+                                    <h6 class="mt-2">{{ 'SROVNANI.DOPLNKOVA' | translate }}</h6>
+                                    <div class="clearfix">{{ r.param_obj.skl.popis }}<span class="float-right" [innerHTML]="r.param_obj.skl | menaFormatInfo:r.param_obj.skl.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.ur.popis }}<span class="float-right" [innerHTML]="r.param_obj.ur | menaFormatInfo:r.param_obj.ur.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.zav.popis }}<span class="float-right" [innerHTML]="r.param_obj.zav | menaFormatInfo:r.param_obj.zav.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.gc.popis }}<span class="float-right" [innerHTML]="r.param_obj.gc | menaFormatInfo:r.param_obj.gc.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.vb.popis }}<span class="float-right" [innerHTML]="r.param_obj.vb | menaFormatInfo:r.param_obj.vb.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.ren.popis }}<span class="float-right" [innerHTML]="r.param_obj.ren | menaFormatInfo:r.param_obj.ren.hodnota"></span></div>
+                                    <h6 class="mt-2">{{ 'SROVNANI.PRIP_SKOD' | translate }}</h6>
+                                    <div class="clearfix">{{ r.param_obj.zver.popis }}<span class="float-right" [innerHTML]="r.param_obj.zver | menaFormatInfo:r.param_obj.zver.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.zivel.popis }}<span class="float-right" [innerHTML]="r.param_obj.zivel | menaFormatInfo:r.param_obj.zivel.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.odc.popis }}<span class="float-right" [innerHTML]="r.param_obj.odc | menaFormatInfo:r.param_obj.odc.hodnota"></span></div>
+                                    <div class="clearfix">{{ r.param_obj.vlsk.popis }}<span class="float-right" [innerHTML]="r.param_obj.vlsk | menaFormatInfo:r.param_obj.vlsk.hodnota"></span></div>                                    
+                                </div>                                
+							</div>
+							<div class="col-lg-6 offset-md-1 col-md-5 order-1 px-0">
+                                <ul *ngIf="r.tipy.length" class="mt-4 fa-ul vgl" style="font-size:115%">
+                                    <li *ngFor="let tt of r.tipy">
+                                         <span [outerHTML]="tt | Tips"></span>
+                                    </li>
+                                </ul>
+                                <h5 *ngIf="r.pplatby.length" class="vagl mt-4">{{ 'SROVNANI.PLATBY' | translate }}</h5>
+								<span *ngFor="let pl of r.pplatby" class="" > <!-- *ngIf="platby.length" -->
+									<button *ngIf="pl.value > 0" class="btn btn-sm mt-1 mr-1"
+										[class.btn-primary]="data.platba === pl.key" [class.btn-outline-primary]="data.platba !== pl.key"
+										(click)="data.platba = pl.key">
+                                        {{ pl.key }} x <strong><span [innerHTML]="pl.value | telefonFormat"></span>&nbsp;{{ 'FORM.KC' | translate }}</strong>
+									</button>
+                                </span>
+                                <div *ngIf="r.dokumenty.length" class="hidden-md-down col order-3 px-0">
+                                    <h5 class="vagl mt-4">{{ 'SROVNANI.DOKUMENTY' | translate }}</h5>
+                                    <ul *ngIf="r.dokumenty.length" class="fa-ul">
+                                        <li *ngFor="let dok of r.dokumenty">
+                                            <a class="" href="{{ dok.url }}" target="_pdf_dok"><span class="fa-li" ><i class="text-danger far fa-file-pdf"></i></span> {{ dok.nazev }}</a>
+                                        </li>
+                                    </ul>
+                                </div> 
+                            </div>
+							<div *ngIf="r.dokumenty.length" class="hidden-lg-up col order-3 px-0">
+								<h5 class="vagl mt-4">{{ 'SROVNANI.DOKUMENTY' | translate }}</h5>
+								<ul *ngIf="r.dokumenty.length" class="fa-ul">
+									<li *ngFor="let dok of r.dokumenty">
+										<a class="" href="{{ dok.url }}" target="_pdf_dok"><span class="fa-li" ><i class="text-danger far fa-file-pdf"></i></span> {{ dok.nazev }}</a>
+									</li>
+								</ul>
+							</div>                            
+						</div>
+					</div>                    									
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div *ngIf="data.pojisteni == 'ZAMODP' && offers.length">
+	<alert type="info" *ngIf="layout.prvniNapoveda" [dismissOnTimeout]="8000" [dismissible]="true">
+		<i class="fas fa-chevron-down"></i> {{ 'SROVNANI.COLLAPSEHINT' | translate }}
+	</alert>		
+	<!-- šablona odpovědnost zaměstnance : detail -->
+		<div [@list]="offers.length" *ngIf="!layout.table">
+			<div @items *ngFor="let r of offers" class="card mb-3" [class.selected]="data.produkt === r.id">
+			</div>	
+		</div>
+		<!-- šablona odpovědnost zaměstnance : tabulka -->
+		<div [@list]="offers.length" *ngIf="layout.table" class="card table">
+			<div class="card-header">
+				<div class="row align-items-center">
+					<div class="col-4 col-sm-5 col-lg-2 pl-0 pr-0 row hidden-md-down">
+						<div class="col-12">{{ 'SROVNANI.PARTNER' | translate }}</div>
+					</div>
+					<div class="col-12 col-lg-7 order-3 order-lg-2 pl-0 pr-0 row">
+						<div class="col text-right">
+							{{ 'SROVNANI.PRODUKT' | translate }}</div>
+						<div class="col text-right"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.PC.HINT' | translate }}">
+							{{ 'SROVNANI.PC.TITLE' | translate }}</div>
+						<div class="col text-right"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.SPOL.HINT' | translate }}">
+							{{ 'SROVNANI.SPOL.TITLE' | translate }}</div>
+						<div class="col text-right"
+							placement="top"
+							triggers="mouseenter:mouseleave"
+							popover="{{ 'SROVNANI.UZPL.HINT' | translate }}">
+							{{ 'SROVNANI.UZPL.TITLE' | translate }}</div>							
+					</div>
+					<div class="col-8 col-sm-7 col-lg-3 order-2 order-lg-3 pl-0 pr-0 row hidden-md-down">
+						<div class="text-center ml-4">{{ 'SROVNANI.SPLATKA' | translate }}: {{ ('TEXTY.PLATBA.' + data.platba) | translate }}</div>
+					</div>						
+				</div>
+			</div>
+			<div class="card-body">
+				<div @items *ngFor="let r of offers" class="row partner align-items-center" [class.selected]="r.id === data.produkt">
+					<div class="col-4 col-sm-5 col-lg-2 pl-0 pr-0 row align-items-center">
+						<div class="col-12">
+							<img src="{{ LOGA[r.pojistovna] }}" class="img-fluid" style="max-height:60px;" alt="{{ r.pojistovna }}"
+								(click)="layout.produktCollapsed[r.id] = !layout.produktCollapsed[r.id]"
+        						[attr.aria-expanded]="!layout.produktCollapsed[r.id]" aria-controls="produktCollapsed" 
+							/>
+						</div>
+					</div>
+					<div class="col-12 col-lg-7 order-3 order-lg-2 pl-0 pr-0 row align-items-center">
+						<div class="col text-right">
+							<span [outerHTML]="r.produkt"></span>
+						</div>
+						<div class="col text-right">
+							<span [outerHTML]="r?.param_obj?.pc.hodnota | menaFormat"></span>
+						</div>
+						<div class="col text-right" style="font-size: 80%"><span [outerHTML]="r?.param_obj?.spol.hodnota | spolFormat"></span></div>
+						<div class="col text-right"><span [outerHTML]="r.param_obj.uzpl.hodnota"></span></div>
+					</div>								
+					<div class="col-8 col-sm-7 col-lg-3 order-2 order-lg-3 p-0 row align-items-center">
+						<div class="col text-right pl-0 cena vag"><span *ngIf="r.platby[data.platba] > 0">{{ r.platby[data.platba] | telefonFormat }}&nbsp;{{ 'FORM.KC' | translate }}</span></div>
+						<div class="col text-right">
+							<button class="btn btn-sm btn-success pull-right" (click)="vyberProdukt.emit(r.id);">
+								{{ 'FORM.BUTTONS.SJEDNAT' | translate }}&nbsp;<i class="fa fa-chevron-right"></i>
+							</button>
+						</div>
+					</div>
+					<div id="produktCollapsed_{{r.id}}" [collapse]="layout.produktCollapsed[r.id]" class="col-12 order-4">
+						<hr class="mb-0" />
+						<div class="row mb-2">
+							<div class="col-sm-8 order-2 order-sm-0 pl-0">
+								<h5 *ngIf="r.dokumenty.length" class="vagl mt-4">{{ 'SROVNANI.DOKUMENTY' | translate }}</h5>
+								<ul *ngIf="r.dokumenty.length" class="fa-ul">
+									<li *ngFor="let dok of r.dokumenty">
+										<a class="" href="{{ dok.url }}" target="_pdf_dok"><span class="fa-li" ><i class="text-danger far fa-file-pdf"></i></span> {{ dok.nazev }}</a>
+									</li>
+								</ul>
+							</div>
+							<div class="col-sm-4 order-1 px-0">
+								<h5 *ngIf="r.pplatby.length" class="vagl mt-4">{{ 'SROVNANI.PLATBY' | translate }}</h5>
+								<span *ngFor="let pl of r.pplatby" class="" >
+									<button *ngIf="pl.value > 0" class="btn btn-sm mt-1 mr-1"
+										[class.btn-primary]="data.platba === pl.key" [class.btn-outline-primary]="data.platba !== pl.key"
+										(click)="data.platba = pl.key">
+										{{ pl.key }} x <strong><span [outerHTML]="pl.value | telefonFormat"></span>&nbsp;{{ 'FORM.KC' | translate }}</strong>
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>								
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>

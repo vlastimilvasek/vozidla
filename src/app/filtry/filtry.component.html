@@ -1,0 +1,114 @@
+<fieldset #pf id="pf" ngModelGroup="pf">
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+
+      <!--  Filtr limity -->
+      <div>
+        <div style="max-width: 20rem;">
+          <h5 class="card-title">{{ 'FILTRY.MIN_LIMITS' | translate }}</h5>
+          {{ 'FILTRY.ZDR' | translate }}
+          <span class="float-right">{{ min_zdr.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #min_zdr name="min_zdr" type="range" [(ngModel)]="filters.min_zdr" min="35000000" max="150000000" step="5000000">
+          </div>
+          {{ 'FILTRY.ASN' | translate }}
+          <span class="float-right">{{ asn.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #asn name="asn" type="range" [(ngModel)]="data.extra.asn" min="0" max="20000" step="1000">
+          </div>
+          {{ 'FILTRY.ASP' | translate }}
+          <span class="float-right">{{ asp.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #asp name="asp" type="range" [(ngModel)]="data.extra.asp" min="0" max="20000" step="1000">
+          </div>
+          {{ 'FILTRY.NV' | translate }}
+          <span class="float-right">{{ nv.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #nv name="nv" type="range" [(ngModel)]="data.extra.nv" min="0" max="10000" step="1000">
+          </div>
+          <strong>{{ 'FILTRY.SKL' | translate }}</strong>
+          <span class="float-right">{{ skl.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #skl name="skl" type="range" [(ngModel)]="data.extra.skl" min="0" max="30000" step="1000">
+          </div>
+          {{ 'FILTRY.UR' | translate }}
+          <span class="float-right">{{ ur.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #ur name="ur" type="range" [(ngModel)]="data.extra.ur" min="0" max="50000" step="10000">
+          </div>
+          {{ 'FILTRY.ZAV' | translate }}
+          <span class="float-right">{{ zav.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #zav name="zav" type="range" [(ngModel)]="data.extra.zav" min="0" max="30000" step="1000">
+          </div>
+          {{ 'FILTRY.ZVER' | translate }}
+          <span class="float-right">{{ zver.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #zver name="zver" type="range" [(ngModel)]="data.extra.zver" min="0" max="200000" step="5000">
+          </div>
+          {{ 'FILTRY.ZIVEL' | translate }}
+          <span class="float-right">{{ zivel.value | telefonFormat }} {{ 'FORM.KC' | translate }}</span>
+          <div>
+            <input #zivel name="zivel" type="range" [(ngModel)]="data.extra.zivel" min="0" max="200000" step="5000">
+          </div>
+
+        <div class="form-group row">
+            <label class="col-8 col-form-label">{{ 'FILTRY.GC' | translate }}</label>
+            <div class="col-4">
+                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                <label class="btn btn-outline-primary" [class.active]="data.extra.gc === 0">
+                    <input name="extra.gc" #Pojistnikvlastnik="ngModel" [(ngModel)]="data.extra.gc" [value]="0" type="radio" />
+                    {{ 'FORM.NE' | translate }}
+                </label>
+                <label class="btn btn-outline-primary" [class.active]="data.extra.gc === 1">
+                    <input name="extra.gc" #Pojistnikvlastnik="ngModel" [(ngModel)]="data.extra.gc" [value]="1" type="radio" />
+                    {{ 'FORM.ANO' | translate }}
+                </label>
+                </div>
+            </div>                    		
+        </div>
+
+          <input #pa name="pa" type="hidden" [(ngModel)]="data.extra.pa">
+          <input #odc name="odc" type="hidden" [(ngModel)]="data.extra.odc">
+
+        </div>
+      </div>
+      <div *ngIf="data.pojisteni == 'OBODP';"></div>      
+
+    </div>
+    <div class="col-12 col-md-6">
+
+      <!--  Filtr partneři -->
+
+      <h5 class="card-title">{{ 'FILTRY.PARTNERS' | translate }}
+        <small>
+          <a role="button" class="btn btn-link" (click)="partneriVse($event)">{{ 'FILTRY.SELECT_ALL' | translate }}</a>
+        </small>
+      </h5>
+      <div class="ml-3">
+        <div *ngFor="let p of filters.partneri" class="form-group1">
+          <div class="custom-control custom-checkbox col align-items-center">
+            <input class="custom-control-input" name="{{ p }}" id="id_{{ p }}" [(ngModel)]="filters.partnobj[p]" value="1" type="checkbox"
+            />
+            <label class="custom-control-label" for="id_{{ p }}">
+              <img src="{{ LOGA[p] }}" style="max-height:30px;" alt="{{ p }}" />
+            </label>
+          </div>
+        </div>
+      </div>
+      <!--  Filtr platba -->
+      <h5 class="mt-2 card-title">{{ 'POJISTKA.PLATBA.LABEL' | translate }}</h5>
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label *ngFor="let platba of filters.platby" class="btn btn-sm btn-outline-primary" [class.active]="data.platba === platba">
+          <input name="platba" [(ngModel)]="data.platba" [value]="platba" type="radio" />
+          {{ ('TEXTY.PLATBA.' + platba) | translate }}
+        </label>
+      </div>      
+
+    </div>    
+  </div>
+
+</fieldset>
+
+

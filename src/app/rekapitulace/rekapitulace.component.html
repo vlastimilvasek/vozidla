@@ -1,0 +1,43 @@
+<fieldset #rekap id="rekap" ngModelGroup="rekap">
+
+<div class="row">
+  <!-- první sloupec -->
+  <div class="{{ layout.grid.column1 }}">
+    <div class="row">
+      <div class="col-12 col-sm-3">
+        <h5 class="vagl text-primary">{{ 'OSOBA.POJISTNIK.LABEL' | translate }}</h5>
+      </div>
+      <div class="col-12 col-sm-9 row">
+        <div class="col-12">{{ data.pojistnik.jmeno }} {{ data.pojistnik.prijmeni }}</div>
+        <div class="col-12">{{ data.pojistnik.adresa.ulice }} {{ data.pojistnik.adresa.cp }}, {{ data.pojistnik.adresa.psc }} {{ data.pojistnik.adresa.obec }}</div>
+        <div class="col-12"><strong><i class="fas fa-envelope"></i> {{ data.pojistnik.email }}</strong></div>
+        <div class="col-12">
+          <i class="fas fa-phone"></i> {{ data.pojistnik.telefon | telefonFormat}}</div>
+      </div>
+    </div>
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.PROHLASENI.TITLE' | translate }}</h4>
+    <div class="prohlaseni text-smaller" [innerHTML]="'REKAPITULACE.PROHLASENI.TEXT' | translate"></div>
+
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.SOUHLAS.TITLE' | translate }}</h4>
+    <div class="custom-control custom-checkbox">
+        <input class="custom-control-input" [(ngModel)]="data.souhlas" id="souhlas" name="souhlas"  value="1" type="checkbox" required />
+        <label class="text-smaller custom-control-label" for="souhlas">
+        {{ 'REKAPITULACE.SOUHLAS.TEXT' | translate }}
+        </label>
+    </div>
+
+    <h4 class="mt-4 vagl text-primary">{{ 'REKAPITULACE.OSTATNI.TITLE' | translate }}</h4>
+    <div class="form-group">
+        <label for="poznamka">{{ 'REKAPITULACE.OSTATNI.TEXT' | translate }}</label>
+        <textarea [(ngModel)]="data.poznamka" class="form-control" name="poznamka" id="poznamka" rows="2"></textarea>
+    </div>    
+  </div>
+  <!-- druhý sloupec -->
+  <div class="{{ layout.grid.column2 }}">
+    <h4 *ngIf="r" class="vagl text-primary">Vybraný produkt</h4>
+    <app-produktinfo *ngIf="r" [(data)]="data" [r]="r" [show_doc]="true" [layout]="layout"></app-produktinfo>
+    <div class="hidden-md-up mb-4"></div>
+  </div>
+</div>
+
+</fieldset>

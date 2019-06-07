@@ -1,0 +1,224 @@
+{
+    "TEXTY": {
+        "PLATBA": {
+	        "1": "yearly",
+	        "2": "half-yearly",	        
+	        "4": "quarterly"	        	        
+		},
+        "SLEVEL": {
+	        "1": "low",
+	        "2": "middle",	        
+	        "3": "high"	        	        
+		},
+        "OBODP": "civic liability",
+        "ZAMODP": "employee liability"
+    },
+    "FORM": {
+        "TABS": {
+	        "ZADANI": "Basic parameters",
+	        "SROVNANI": "Offers comparison",	        
+	        "UDAJE": "Insurance",
+	        "OSOBNI": "Personal",
+	        "REKAPITULACE": "Recapitulation"	        	        
+		},
+        "BUTTONS": {     
+	        "SROVNAT": "Compare insurance offers",
+	        "ZPET": "Back",
+	        "DALE": "Continue",
+	        "SJEDNAT": "Select"       	        
+		},		
+        "SELECT" : {
+	        "DEFAULT": "Please, select an option",
+	        "SEARCHTEXT": "Type to search...",
+	        "NOTFOUND": "No option found"
+		},	
+        "VALIDATION" : {
+	        "REQUIRED": "This field is required"
+		},
+        "ANO": "Yes",
+        "NE": "No",
+        "KC": "Czk"        
+    },
+    "ZADANI": {
+        "POJISTENI": {    
+	        "TITLE": "What kind of insurance do you need?"
+		}
+    },
+    "SROVNANI": {
+	    "EXTRAS": {
+	    	"TITLE": "Supplementary insurance",
+	   		"LIMIT_ZSV": "Loss of entrusted thing:"
+	    },	    
+	    "FILTERS": {
+	    	"TITLE": "Filters & settings",
+	    	"PARTNERS": "Partners",
+	   		"SELECT_ALL": "Select all",
+	   		"MIN_LIMITS": "Minimal indemnity",
+	   		"ZDR": "Injury to health and death:",
+	   		"MAJ": "Damage to property:",
+	   		"SPOLUUC": "Participation",
+	   		"SPOL_NULL": "only without participation",
+	   		"SPOL_MAX": "Acceptable participation:"
+	    },
+	    "TOOLS": {
+	    	"TITLE": "Tools",
+	    	"OFFERS_PDF": "Comparison PDF"
+	    },	  	    
+	    "BACK": "Edit parameters",
+	    "ZAMODP": "Employee liability",
+	    "OBODP": "Civic liability",
+        "PARTNER": "Insurer",
+        "PRODUKT": "Variant",
+        "SPLATKA": "Payment"	    
+    },    
+    "POJISTKA": {
+        "POJISTENI": {    
+	        "ZAMODP": "Employee liability insurance",
+	        "OBODP": "Civic liability insurance"
+		},
+        "POCATEK": {
+	        "LABEL": "Beginning",
+	        "PLACEHOLDER": "20. 4. 2018",
+	        "HINT": "beginning Hint"
+		},
+        "PC": {
+	        "LABEL": "Minimum insured amount",
+			"PLACEHOLDER": "100000",
+	        "HINT": "Choose an amount of approximately 4.5 times your gross wage. This is the maximum that the employer may require."
+		},
+        "PLATBA": {
+	        "LABEL": "Payment frequency",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},		
+        "VEK": {
+	        "LABEL": "Age of the Insured",
+			"PLACEHOLDER": "40",
+	        "HINT": ""
+		},
+        "POVOLANI": {
+	        "LABEL": "Job",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "PROFESE": {
+	        "LABEL": "Profession",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},		
+        "RIZENI_VOZ": {
+	        "LABEL": "Driving of company vehicle?",
+			"PLACEHOLDER": "",
+	        "HINT": "Should insurance cover accidents related to the operation of company car?"
+		},
+        "RIZENI_SOU": {
+	        "LABEL": "Vehicle use also for private trips?",
+			"PLACEHOLDER": "",
+	        "HINT": "Should insurance also cover the damage related to the operation of the company car outside of the business use, for private use, eg on the weekend?"
+		},
+        "RIZENI_NAKL": {
+	        "LABEL": "Driving of truck?",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "RIZENI_STR": {
+	        "LABEL": "Driving of working machine?",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "UZ_PLATNOST": {
+	        "LABEL": "Territorial validity",
+			"PLACEHOLDER": "",
+	        "HINT": "",
+	        "EVROPA": "Europe",
+	        "CR": "ČR"
+		}			
+    },
+    "ADRESA": {
+        "PSC": {
+	        "LABEL": "ZIP code",
+	        "PLACEHOLDER": "14800",
+	        "HINT": ""
+		},		
+        "OBEC": {
+	        "LABEL": "Place",
+	        "PLACEHOLDER": "Praha",
+	        "HINT": ""
+		},
+        "ULICE": {
+	        "LABEL": "Street",
+	        "PLACEHOLDER": "Podhorská",
+	        "HINT": ""
+		},		
+        "CP": {
+	        "LABEL": "Number",
+	        "PLACEHOLDER": "92/11",
+	        "HINT": ""
+		} 
+    },
+    "POJISTNIK": {
+        "TABTITLE": "Policyholder",
+        "TYP": {
+	        "LABEL": "Policyholder",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},        
+        "TITUL": {
+	        "LABEL": "Title",
+	        "PLACEHOLDER": "Mgr.",
+	        "HINT": ""
+		},
+        "TITUL_ZA": {
+	        "LABEL": "Title after name",
+	        "PLACEHOLDER": "Ph.D.",
+	        "HINT": ""
+		},		   
+        "JMENO": {
+	        "LABEL": "First Name",
+	        "PLACEHOLDER": "John",
+	        "HINT": "first name Hint"
+		},        
+        "PRIJMENI": {
+	        "LABEL": "Last Name",
+	        "PLACEHOLDER": "Doe",	        
+	        "HINT": "Last Name Hint"
+		},
+        "SPOLECNOST": {
+	        "LABEL": "Company name",
+	        "PLACEHOLDER": "Srovnávač.cz, s.r.o.",
+	        "HINT": ""
+		},
+        "EMAIL": {
+	        "LABEL": "Email",
+	        "PLACEHOLDER": "info@srovnavac.cz",
+	        "HINT": ""
+		},
+		"RC": {
+	        "LABEL": "Personal ID",
+	        "PLACEHOLDER": "7708071234",
+	        "HINT": "Fill in without trailing slash. Foreigners in format: RRMMDD9999.",
+	        "REQUIRED": "Please, fill in in correct format."	        
+		},
+		"IC": {
+	        "LABEL": "IČ",
+	        "PLACEHOLDER": "27074358",
+	        "HINT": "Zadejte platné IČ - osm číslic. Můžete ho vyhledat např. v systému ARES.",
+	        "REQUIRED": "Please, fill in in correct format."	        
+		},
+		"PLATCE_DPH": {
+	        "LABEL": "VAT subject",
+	        "PLACEHOLDER": "",
+	        "HINT": "Check in case of VAT subject."	        
+		},				
+        "TELEFON": {
+	        "LABEL": "Phone",
+	        "PLACEHOLDER": "603 929 233",
+	        "HINT": ""
+		},			
+        "KADRESA": {
+	        "LABEL": "Different correspondence address?",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		} 
+    }         
+}

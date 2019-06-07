@@ -1,0 +1,119 @@
+<fieldset #udaje id="udaje" ngModelGroup="udaje">
+
+<div class="row">
+	<div class="{{ layout.grid.column1 }}">
+
+		<div class="form-group row">
+			<label class="{{ layout.grid.label }} col-form-label"
+				placement="right"
+				triggers="mouseenter:mouseleave"		
+				popover="{{ 'POJISTKA.POCATEK.HINT' | translate }}">
+				{{ 'POJISTKA.POCATEK.LABEL' | translate }}
+			</label>		
+			<div class="{{ layout.grid.input }}">
+				<div class="input-group">
+					<input name="termin" class="form-control" type="text" placeholder="{{ 'POJISTKA.POCATEK.PLACEHOLDER' | translate }}" 
+						bsDatepicker
+						[bsConfig]="bsConfig"
+						[minDate]="minDate"
+						[maxDate]="maxDate"
+						[(ngModel)]="data.pocatek"
+						#Pocatek="ngModel" #dp="bsDatepicker" required autocomplete="off" />
+					<div class="input-group-append" (click)="dp.show()">
+						<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+					</div>
+				</div>	
+			</div>
+			<small [hidden]="Pocatek.valid || (Pocatek.pristine && !submitted)" class="text-danger offset-sm-3 col-sm-9">
+				{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+			</small>			
+		</div>
+
+        <!-- připojištění -->
+        <div *ngIf="r.extra.length">
+            <h4 class="vagl">{{ 'POJISTKA.PRIPOJISTENI' | translate }}</h4>
+            <div *ngFor="let e of r.extra; let i = index;" class="form-group row">
+                <!-- seznamy -->
+                <ng-template [ngIf]="e.typ === 'select'">
+                    <label class="{{ layout.grid.label }}  col-form-label"
+                        placement="right"
+                        triggers="mouseenter:mouseleave"	
+                        popover="{{ e.text }}">
+                        {{ e.label }}
+                    </label>		
+                    <div class="{{ layout.grid.input }}"> 
+                        <ngx-select
+                            name = "{{ e.kod }}" class="" #iPrip="ngModel"
+                            placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                            noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                            [keepSelectedItems]="false"
+                            [items]="e.hodnota.options"
+                            [allowClear]="false"
+                            [(ngModel)]="r.param_obj[e.kod].hodnota"
+                            (select)="prepocetCeny(e.kod)" 
+                            required>
+                        </ngx-select>			
+                    </div>
+                    <small [hidden]="iPrip.valid || (iPrip.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                        {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                    </small>
+                </ng-template>
+                <!-- radios -->
+                <ng-template [ngIf]="e.typ === 'radio'">
+                    <label class="{{ layout.grid.label }} col-form-label"
+                        placement="right"
+                        triggers="mouseenter:mouseleave"
+                        popover="{{ e.text }}">                        		
+                        {{ e.label }}
+                    </label>
+                    <div class="{{ layout.grid.input }}">   		
+                        <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+
+                            <label *ngFor="let o of e.hodnota.options" class="btn btn-outline-primary"
+                                (click)="prepocetCeny(e.kod)"
+                                [class.active]="r.param_obj[e.kod].hodnota === o.value">
+                                <input name="{{e.kod}}" [(ngModel)]="r.param_obj[e.kod].hodnota" [value]="o.value" type="radio" />
+                                {{ o.label }}
+                            </label>
+
+                        </div>
+                        <span class="align-middle pl-4" *ngIf="r.param_obj[e.kod].hodnota > 0">+{{ r?.pripojisteni[e.kod] | telefonFormat }}&nbsp;{{ 'FORM.KC' | translate }}</span>
+                    </div>
+                </ng-template>
+
+            </div>
+        </div>         
+
+        <!-- připojištění 
+        <div *ngIf="r.extra.length">
+            <div *ngFor="let e of r.extra; let i = index;" class="form-group row">
+                <label class="{{ layout.grid.label }}  col-form-label"
+                    placement="right"
+                    triggers="mouseenter:mouseleave"	
+                    popover="{{ e.text }}">
+                    {{ e.label }}
+                </label>		
+                <div class="{{ layout.grid.input }}"> 
+                    <select
+                        [(ngModel)]="r.param_obj[e.kod].hodnota"
+                        (change)="prepocetCeny(e.kod)"
+                        class="form-control"
+                        name = "{{e.kod}}"
+                    >
+                        <option [value]="o.value" *ngFor="let o of e.hodnota.options">{{o.label}}</option>
+                    </select>	                    		
+                </div>
+                {{ r.param_obj[e.kod].hodnota }}
+            </div>
+        </div>         -->
+
+	</div>
+	<!-- druhý sloupec -->
+	<div class="{{ layout.grid.column2 }}">
+		<app-produktinfo *ngIf="r" [(data)]="data" [(r)]="r" [layout]="layout"></app-produktinfo>
+		<div class="hidden-md-up mb-4"></div>		
+	</div>
+</div>
+
+</fieldset>
+

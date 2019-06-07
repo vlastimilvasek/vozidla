@@ -1,0 +1,396 @@
+{
+    "TEXTY": {
+        "PLATBA": {
+	        "1": "roční",
+	        "2": "pololetní",	        
+	        "4": "čtvrtletní"	        	        
+		},
+        "SLEVEL": {
+	        "1": "nízká",
+	        "2": "střední",	        
+	        "3": "vyšší"	        	        
+		},
+        "OBODP": "občanská odpovědnost",
+        "ZAMODP": "odpovědnost zaměstnance"
+    },
+    "FORM": {
+        "TABS": {
+	        "ZADANI": "Základní údaje",
+	        "SROVNANI": "Srovnání",
+	        "UDAJE": "Pojistka",
+	        "OBJEKT": "Vozidlo",
+            "OSOBNI": "Osobní údaje",
+	        "REKAPITULACE": "Rekapitulace"
+		},
+        "BUTTONS": {     
+	        "SROVNAT": "Srovnat nabídky pojišťoven",
+	        "ZPET": "Zpět",
+	        "DALE": "Pokračovat",
+			"SJEDNAT": "Sjednat",
+			"FILTRY": "Filtry",
+			"CLOSE": "Zavřít",
+			"OFFERS_PDF": "Stáhnout v PDF",
+			"SDILENI": "Sdílet/uložit odkaz na tuto kalkulaci",
+			"EMAIL": "Zaslat na email",
+			"NOVA": "Nová kalkulace",
+			"NOVATIP": "Vyresetuje formulář pro novou kalkulaci"			
+		},
+		"SELECT" : {
+	        "DEFAULT": "Vyberte prosím z nabídky",
+	        "SEARCHTEXT": "Napište pár znaků...",
+	        "NOTFOUND": "Žádná položka"	        
+		},
+        "VALIDATION" : {
+	        "REQUIRED": "Vyplňte prosím toto pole.",
+	        "RADIOREQUIRED": "Vyberte prosím jednu z voleb.",
+	        "MAX": "Maximální hodnota je {{value}}.",
+	        "MIN": "Minimální hodnota je {{value}}.",
+			"RANGE": "Povolená hodnota je {{min}} - {{max}}.",
+			"EMAIL": "Zadejte prosím platnou emailovou adresu."
+		},
+        "ANO": "Ano",
+        "NE": "Ne",
+        "KC": "Kč",
+        "CCM": "ccm",
+        "KW": "kW",
+        "KG": "kg"
+    },
+    "ZADANI": {
+        "POJISTENI": {    
+	        "TITLE": "Jaký druh pojištění potřebujete?"
+		},
+        "VOZIDLO": {    
+	        "TITLE": "Údaje o vozidle"
+		},
+        "OSOBY": {    
+	        "TITLE": "Osoby na smlouvě"
+		},
+        "DRUH": {    
+            "TITLE": "Co potřebuje pojistit?",
+            "AUTO": "M1 - Osobní",
+            "N1": "N1 - Užitkový",
+            "MOTO": "Motocykl",
+            "OSTATNI": "Jiné ..."
+		}
+    },
+	"FILTRY": {
+		"TITLE": "Filtry a nastavení",
+		"PARTNERS": "Pojišťovny",
+		"SELECT_ALL": "Vybrat vše",
+		"MIN_LIMITS": "Minimální limit plnění",
+		"ZDR": "Újma na zdraví a smrt:",
+		"MAJ": "Újma na věci, majetku:",
+        "SKL": "Připojištění skel:",
+        "ASN": "Asistence - defekt pneu v ČR:",        
+        "ASP": "Asistence - odtah v zahraničí:",
+        "NV": "Náhradní vozidlo:",                
+        "ZIVEL": "Živelné škody",  
+        "ZVER": "Střet se zvěří",      
+        "ZAV": "Pojištění zavazadel",
+        "UR": "Úrazové připojištění",
+        "GC": "Garance ceny",
+		"SPOL_NULL": "pouze bez spoluúčasti",
+	    "TOOLS": {
+	    	"TITLE": "Nástroje",
+	    	"OFFERS_PDF": "Srovnání v PDF"
+	    }			
+	},
+    "MODAL": {   
+        "SDILENI": {
+			"TITLE": "Sdílejte kalkulaci pojištění odpovědnosti",
+			"PLACEHOLDER": "Odkaz na tuto kalkulaci",
+			"TEXT": "Zkopírujte si odkaz na tuto kalkulaci pojištění odpovědnosti, abyste ji mohli snadno sdílet s&nbsp;ostatními nebo&nbsp;se&nbsp;k&nbsp;ní později sami vrátit."
+		},
+        "EMAIL": {
+			"TITLE": "Kalkulace pojištění odpovědnosti na email",
+			"LABEL": "Emailová adresa",
+			"PLACEHOLDER": "Vaše emailová adresa",
+			"SEND": "Odeslat",
+			"SENT": "Odesláno na Váš email.",
+			"TEXT": "Pošlete si odkaz na tuto kalkulaci pojištění odpovědnosti na Váš email, abyste&nbsp;s&nbsp;k&nbsp;ní mohli později vrátit."
+		}
+    },	
+    "SROVNANI": {
+        "ASISTENCE": "Asistence",
+        "DOPLNKOVA": "Doplňková pojištění",
+        "PRIP_SKOD": "Pojištění škod na vozidle",        
+        "POV": "povinné ručení",
+        "FILTRY": {
+        	"HINT": "pro lepší orientaci v nabídkách si můžete vyfiltrovat jen ty odpovídající Vašim potřebám."
+		},
+		"ZDR": {
+        	"TITLE": "Újma na zdraví/smrt",
+        	"HINT": "Limit plnění pro újmu na zdraví a smrt"
+        },
+        "MAJ": {
+        	"TITLE": "Majetkové újmy",
+        	"HINT": "Limit plnění pro újmu na majetku a ušlém zisku"
+        },
+        "PRODUKT": {
+        	"TITLE": "Produkt",
+        	"HINT": ""
+        },
+        "INFO": {
+        	"TITLE": "Více informací",
+            "HINT": "Kliknutím na řádek zobrazíte detailní informace o produktu včetně pojistných podmínek.",
+            "SHOW": "Zobraz"
+		},
+        "PC": {
+        	"TITLE": "Pojistné částka",
+        	"HINT": "Limit pojistného plnění"
+        },
+        "SPOL": {
+        	"TITLE": "Spoluúčast",
+        	"HINT": ""
+        },
+        "UZPL": {
+        	"TITLE": "Územní platnost",
+        	"HINT": ""
+		},		
+		"KALKULUJI": "Počítám nabídky pojištění odpovědnosti. Prosím o chvilku strpení.",
+		"COLLAPSEHINT": "Kliknutím na logo zobrazíte/skryjete podrobnější informace o produktu.",		
+	    "BACK": "Upravit zadání",
+        "ZAMODP": "odpovědnost zaměstnance",
+        "OBODP": "občanská odpovědnost",
+        "PARTNER": "Pojišťovna",
+		"SPLATKA": "Splátka",
+		"DOKUMENTY": "Dokumenty",
+		"PLATBY": "Možné platby"
+    },    
+    "POJISTKA": {
+		"NENIPRODUKT": "Není vybrán žádný produkt, vyberte prosím ve srovnání.",
+		"PRIPOJISTENI": "Připojištění",
+        "POJISTENI": {    
+	        "POV": "Povinné ručení",
+	        "HAV": "Havarijní pojištění"
+		},
+        "POCATEK": {
+	        "LABEL": "Počátek pojištění",
+	        "PLACEHOLDER": "20. 4. 2018",
+	        "HINT": "Zvolte počátek pojištění"
+		},
+        "OVER_BM": {
+	        "LABEL": "",
+            "ANO": "Chci přesnou nabídku s ověřením bonusů",
+            "NE": "Znám své bonusy",
+	        "HINT": "Pro přesný výpočet ceny s ověřením bezeškodního průběhu pojišťovny vyžadují identifikační údaje - jméno, RČ / IČ.<br />Výpočet je možný i bez těchto údajů - se zadáním bonusu a malusu, nicméně následně při sjednání a zadání osobních údajů se cena může změnit."
+		},
+        "PLATBA": {
+	        "LABEL": "Platba pojistného",
+			"PLACEHOLDER": "Vyberte frekvenci placení pojistného. Základní variantou je roční četnost. Pololetní a čtvrtletní nemusí být vždy dostupné, protože pojišťovny stanovují různé limity minimálního pojistného.",
+	        "HINT": ""
+		},
+        "VEK": {
+	        "LABEL": "Věk pojištěného",
+			"PLACEHOLDER": "40",
+	        "HINT": ""
+		},
+        "RIZENI_STR": {
+	        "LABEL": "Řízení pracovního stroje?",
+			"PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "UZ_PLATNOST": {
+	        "LABEL": "Územní platnost",
+			"PLACEHOLDER": "",
+	        "HINT": "",
+	        "EVROPA": "Evropa",
+	        "CR": "ČR"
+		}										
+    },
+    "VOZIDLO": {
+        "DRUH": {    
+	        "LABEL": "Druh vozidla",
+	        "HINT": ""
+        },
+        "ZNACKA": {    
+	        "LABEL": "Značka",
+	        "HINT": ""
+        },
+        "MODEL": {    
+	        "LABEL": "Model",
+	        "HINT": ""
+        },
+        "ROKVYROBY": {    
+	        "LABEL": "Rok výroby",
+	        "HINT": ""
+        },
+        "PALIVO": {    
+	        "LABEL": "Palivo",
+	        "HINT": ""
+        },
+        "UZITI": {    
+	        "LABEL": "Užívání vozidla",
+	        "HINT": "Nejčastější užívání je běžné, neboli pro soukromé účely. Pokud využíváte vozidlo jinak, zvolte prosím z nabídky."
+        },
+        "OBJEM": {    
+	        "LABEL": "Objem motoru",
+			"PLACEHOLDER": "např. 1596",
+	        "HINT": ""
+        },
+        "VYKON": {    
+	        "LABEL": "Výkon motoru",
+			"PLACEHOLDER": "např. 80",
+	        "HINT": ""
+        },
+        "HMOTNOST": {    
+	        "LABEL": "Celková hmotnost",
+			"PLACEHOLDER": "např. 1890",
+	        "HINT": "Uveďte nejvyšší technicky přípustnou hmotnost. Ve velkém technickém průkazu se jedná o řádek F1."
+        }                
+    },
+    "ADRESA": {
+		"PSC": {
+	        "LABEL": "PSČ",
+	        "PLACEHOLDER": "15500",
+	        "HINT": ""
+		},
+        "OBEC": {
+	        "LABEL": "Obec",
+	        "PLACEHOLDER": "Praha",
+	        "HINT": ""
+		},
+        "ULICE": {
+	        "LABEL": "Ulice",
+	        "PLACEHOLDER": "Podhorská",
+	        "HINT": ""
+		},		
+        "CP": {
+	        "LABEL": "č.p./č.or.",
+	        "PLACEHOLDER": "92/11",
+	        "HINT": ""
+		}   
+    },
+    "OSOBA": {
+        "POJISTNIKVLASTNIK": {
+	        "LABEL": "Vlastník je shodný s pojistníkem",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},
+		"POJISTNIK": {
+            "TITLE": "Pojistník",
+	        "LABEL": "Pojistník",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "POJISTENY": {
+	        "LABEL": "Pojištěný",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},
+        "VLASTNIK": {
+            "TITLE": "Vlastník",
+	        "LABEL": "Vlastník",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+        },
+        "POJISTNIKPROVOZOVATEL": {
+	        "LABEL": "Provozovatel je shodný s pojistníkem",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},        
+        "PROVOZOVATEL": {
+            "TITLE": "Provozovatel",
+	        "LABEL": "Provozovatel",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		},				
+		"TITUL": {
+	        "LABEL": "Titul",
+	        "PLACEHOLDER": "Ing.",
+	        "HINT": ""
+		},
+        "TITUL_ZA": {
+	        "LABEL": "Titul za jménem",
+	        "PLACEHOLDER": "Ph.D.",
+	        "HINT": ""
+		},
+        "JMENO": {
+	        "LABEL": "Jméno",
+	        "PLACEHOLDER": "Jan",
+	        "HINT": "Vyplňte jméno podle skutečnosti."
+		},
+        "PRIJMENI": {
+	        "LABEL": "Příjmení",
+	        "PLACEHOLDER": "Novák",
+	        "HINT": ""
+		},
+        "SPOLECNOST": {
+	        "LABEL": "Název společnosti",
+	        "PLACEHOLDER": "Srovnávač.cz, s.r.o.",
+	        "HINT": ""
+		},		
+        "EMAIL": {
+	        "LABEL": "Email",
+	        "PLACEHOLDER": "info@srovnavac.cz",
+	        "HINT": ""
+		},
+		"RC": {
+	        "LABEL": "Rodné číslo",
+	        "PLACEHOLDER": "7708071234",
+	        "HINT": "Zadejte bez lomítka, pouze 9 nebo 10 číslic. Není-li RČ přiděleno, poslední 4 číslice zadejte 9999.",
+	        "REQUIRED": "Zadejte rodné číslo v platném formátu."	
+		},
+		"IC": {
+	        "LABEL": "IČ",
+	        "PLACEHOLDER": "27074358",
+	        "HINT": "Zadejte platné IČ - osm číslic. Můžete ho vyhledat např. v systému ARES.",
+	        "REQUIRED": "Zadejte platné IČ."	        
+		},
+		"PLATCE_DPH": {
+	        "LABEL": "plátce DPH",
+	        "PLACEHOLDER": "",
+	        "HINT": "Zaškrtněte v případě, že se jedná o plátce DPH."	        
+		},				
+        "TELEFON": {
+	        "LABEL": "Telefon",
+	        "PLACEHOLDER": "603 929 233",
+	        "HINT": "Zadejte jako 9 číslic. V případě nestandardního čísla (se zahraniční předvolbou), uveďte dále do poznámky."
+		},		
+        "KADRESA": {
+	        "LABEL": "Odlišná korespondenční adresa?",
+	        "PLACEHOLDER": "",
+	        "HINT": ""
+		}	  
+	},
+    "REKAPITULACE": {
+	    "PROHLASENI": {
+	        "TITLE": "Prohlášení pojistníka",
+	        "TEXT": "Pojistník (dále také klient, uživatel nebo zájemce) prohlašuje, že je seznámen s obsahem pojistných podmínek a že seznámí pojištěného se všemi náležitostmi smlouvy. Pojistník dále prohlašuje, že veškeré jím poskytnuté informace a odpovědi v této smlouvě (objednávce) jsou úplné a pravdivé, a zavazuje se oznámit pojistiteli a zprostředkovateli bez zbytečného odkladu všechny změny.<br><br>Současně prohlašuje, že mu byly před uzavřením pojistné smlouvy oznámeny informace (\"Informace pro klienty\") podle § 66 zákona č. 37/2004 Sb., o pojistné smlouvě a o změně souvisejících zákonů v platném znění, podle § 21 zákona č. 38/2004 Sb., o pojišťovacích zprostředkovatelích a samostatných likvidátorech pojistných událostí a o změně živnostenského zákona v platném znění a podle § 53 a násl. zákona č. 40/1964 Sb., občanského zákoníku v platném znění.<br><br>Současně prohlašuje, že souhlasí se zpracováním osobních údajů dle zákona č. 101/2000 Sb. za účelem uzavření pojistné smlouvy dle uvedených podmínek."
+		},
+	    "SOUHLAS": {
+	        "TITLE": "Souhlas s podmínkami",
+	        "TEXT": "Souhlasím s výše uvedeným čestným prohlášením, s pojistnými podmínkami, se zpracováním osobních údajů a s obsahem nabídkového souhrnu. Závazně žádám a objednávám pojištění dle výše uvedeného nabídkového souhrnu."
+		},
+	    "OSTATNI": {
+	        "TITLE": "Ostatní",
+	        "TEXT": "Máte-li nějaké připomínky nebo dotazy, napište nám je:"
+        },
+	    "SJEDNAT": {
+	        "ERROR": "Ajaj! Něco se pokazilo. Zkontrolujte připojení k internetu a zkuste opakovat. Případně nás kontaktujte."
+		}        				
+    },
+    "ZAVER": {
+        "TITLE": "Skoro hotovo! Děkujeme",
+	    "CELL1": {
+	        "TITLE": "Smlouva úspěšně sjednána. Děkujeme.",
+	        "TEXT": "Vaše pojištění odpovědnosti bylo úspěšně sjednáno. Děkujeme za Vámi projevenou důvěru."
+		},
+	    "CELL2": {
+	        "TITLE": "Ještě chviličku ...",
+	        "TEXT": "Ověřujeme údaje a připravujeme dokumenty. Prosíme o chvilku strpení."
+		},
+	    "CELL3": {
+	        "TITLE": "Smlouva a dokumenty",
+	        "TEXT": "Připravíme pro Vás návrh pojistné smlouvy a zašleme Vám ho ke kontrole na email <strong>{{email}}</strong>."
+        },
+	    "CELL4": {
+	        "TITLE": "Odsouhlasení a zaslání",
+	        "TEXT": "Po Vašem odsouhlasení, obdržíte poštou pojistné smlouvy, které stačí podepsat/zaplatit a zaslat zpět na adresu uvedenou v průvodním dopise."
+		},
+	    "CELL5": {
+	        "TITLE": "Servis",
+	        "TEXT": "V případě potřeby nás neváhejte kontaktovat. Vždy Vám připravíme pojištění na míru dle Vašich aktuálních potřeb. Těšíme se na další spolupráci. Jsme tu pro Vás! Srovnávač.cz"
+		}	        			
+	}         
+}

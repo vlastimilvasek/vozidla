@@ -1,0 +1,102 @@
+<fieldset [ngModelGroup]="GrName">
+
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right"
+			triggers="mouseenter:mouseleave"
+			popoverTitle="{{ 'ADRESA.ULICE.LABEL' | translate }}"		
+			popover="{{ 'ADRESA.ULICE.HINT' | translate }}">
+			{{ 'ADRESA.ULICE.LABEL' | translate }}
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="ulice" class="form-control" type="text" placeholder="{{ 'ADRESA.ULICE.PLACEHOLDER' | translate }}"
+				[typeahead]="lists.ulice"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				typeaheadOptionField="nazev_ulice"		
+				[(ngModel)]="data.ulice" #ulice="ngModel" autocomplete="off" required />
+		</div>
+		<small [hidden]="ulice.valid || (ulice.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right"
+			triggers="mouseenter:mouseleave"
+			popoverTitle="{{ 'ADRESA.CP.LABEL' | translate }}"		
+			popover="{{ 'ADRESA.CP.HINT' | translate }}">
+			{{ 'ADRESA.CP.LABEL' | translate }}
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="cp" class="form-control" type="text" placeholder="{{ 'ADRESA.CP.PLACEHOLDER' | translate }}"
+				[typeahead]="lists.cp"
+				[typeaheadOptionsLimit]="7"
+				typeaheadOptionField="cp"
+				(typeaheadOnSelect)="CPOnSelect($event)"
+				[(ngModel)]="data.cp" #cp="ngModel" autocomplete="off" required />
+		</div>
+		<small [hidden]="cp.valid || (cp.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>	
+
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }}  col-form-label"
+			placement="right"
+			triggers="mouseenter:mouseleave"
+			popoverTitle="{{ 'ADRESA.OBEC.LABEL' | translate }}"		
+			popover="{{ 'ADRESA.OBEC.HINT' | translate }}">
+			{{ 'ADRESA.OBEC.LABEL' | translate }}
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="obec" class="form-control" type="text"
+				[typeahead]="lists.obec"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				(typeaheadOnSelect)="ObecOnSelect($event)"
+				(blur)="ObecChange($event.target.value)"
+				typeaheadOptionField="nazev"
+				autocomplete="off" 			
+				placeholder="{{ 'ADRESA.OBEC.PLACEHOLDER' | translate }}"
+				[(ngModel)]="data.obec" #obec="ngModel" required />
+		</div>
+		<small [hidden]="obec.valid || (obec.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+	
+	<div class="form-group row">
+		<label class="{{ layout.grid.label }} col-form-label"
+			placement="top"
+			triggers="mouseenter:mouseleave"
+			popoverTitle="{{ 'ADRESA.PSC.LABEL' | translate }}"
+			popover="{{ 'ADRESA.PSC.HINT' | translate }}">
+			{{ 'ADRESA.PSC.LABEL' | translate }}
+		</label>
+		<div class="{{ layout.grid.input }}">
+			<input name="psc" class="form-control" type="text"
+				[typeahead]="lists.psc"
+				[typeaheadOptionsLimit]="7"
+				[typeaheadMinLength]="1"
+				[typeaheadWaitMs]="300"
+				typeaheadOptionField="psc"	
+				placeholder="{{ 'ADRESA.PSC.PLACEHOLDER' | translate }}"
+				autocomplete="off" 
+				[(ngModel)]="data.psc" #psc="ngModel" required>
+		</div>
+		<small [hidden]="psc.valid || (psc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+			{{ 'FORM.VALIDATION.REQUIRED' | translate }}
+		</small>
+	</div>
+
+</fieldset>
+<!--
+<div class="alert alert-info" role="alert">
+	<h3>Lokální data - adresa</h3>
+	<pre>{{ data | json }}</pre>
+</div>
+-->

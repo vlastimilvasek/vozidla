@@ -1,0 +1,58 @@
+		<div *ngIf="data.pojisteni == 'POV'" class="card">
+			<div class="row align-items-center card-body">
+				<div class="{{ layout.grid.info1 }}">
+					<img src="{{ LOGA[r.pojistovna] }}" class="mx-auto d-block" style="max-height:50px;" alt="{{ r.pojistovna }}" />
+				</div>
+				<div class="{{ layout.grid.info2 }}">
+					<h5 class="card-title">{{ r.produkt }}</h5>
+					<div class="card-text">
+						<div class="clearfix">{{ r.param_obj.maj.popis }}<span class="float-right" [innerHTML]="r.param_obj.maj | menaFormatInfo"></span></div>
+                        <div class="clearfix">{{ r.param_obj.zdr.popis }}<span class="float-right" [innerHTML]="r.param_obj.zdr | menaFormatInfo"></span></div>
+                        <h6 class="mt-2">{{ 'SROVNANI.ASISTENCE' | translate }}</h6>
+                        <div class="clearfix">{{ r.param_obj.asn.popis }}:<span class="float-right" [innerHTML]="r.param_obj.asn | menaFormatInfo:r.param_obj.asn.hodnota"></span></div>
+                        <div class="clearfix">{{ r.param_obj.asp.popis }}:<span class="float-right" [innerHTML]="r.param_obj.asp | menaFormatInfo:r.param_obj.asp.hodnota"></span></div>
+                        <div class="clearfix">{{ r.param_obj.nv.popis }}:<span class="float-right" [innerHTML]="r.param_obj.nv | menaFormatInfo:r.param_obj.nv.hodnota"></span></div>
+                        <div class="clearfix">{{ r.param_obj.pa.popis }}:<span class="float-right" [innerHTML]="r.param_obj.pa | menaFormatInfo:r.param_obj.pa.hodnota"></span></div>
+                        
+                        <input #dopl name="dopl" type="hidden" [value]="r.param_obj.skl.hodnota+r.param_obj.ur.hodnota+r.param_obj.zav.hodnota+r.param_obj.gc.hodnota+r.param_obj.gc.hodnota+r.param_obj.ren.hodnota">
+                        <ng-template [ngIf]="dopl.value > 0">
+                            <h6 class="mt-2">{{ 'SROVNANI.DOPLNKOVA' | translate }}</h6>
+                            <div *ngIf="r.param_obj.skl.hodnota > 0" class="clearfix">{{ r.param_obj.skl.popis }}<span class="float-right" [innerHTML]="r.param_obj.skl | menaFormatInfo:r.param_obj.skl.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.ur.hodnota > 0" class="clearfix">{{ r.param_obj.ur.popis }}<span class="float-right" [innerHTML]="r.param_obj.ur | menaFormatInfo:r.param_obj.ur.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.zav.hodnota > 0" class="clearfix">{{ r.param_obj.zav.popis }}<span class="float-right" [innerHTML]="r.param_obj.zav | menaFormatInfo:r.param_obj.zav.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.gc.hodnota > 0" class="clearfix">{{ r.param_obj.gc.popis }}<span class="float-right" [innerHTML]="r.param_obj.gc | menaFormatInfo:r.param_obj.gc.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.vb.hodnota > 0" class="clearfix">{{ r.param_obj.vb.popis }}<span class="float-right" [innerHTML]="r.param_obj.vb | menaFormatInfo:r.param_obj.vb.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.ren.hodnota > 0" class="clearfix">{{ r.param_obj.ren.popis }}<span class="float-right" [innerHTML]="r.param_obj.ren | menaFormatInfo:r.param_obj.ren.hodnota"></span></div>
+                        </ng-template>
+
+                        <input #skody name="skody" type="hidden" [value]="r.param_obj.zver.hodnota+r.param_obj.zivel.hodnota+r.param_obj.odc.hodnota+r.param_obj.vlsk.hodnota">
+                        <ng-template [ngIf]="skody.value > 0">
+                            <h6 class="mt-2">{{ 'SROVNANI.PRIP_SKOD' | translate }}</h6>
+                            <div *ngIf="r.param_obj.zver.hodnota > 0" class="clearfix">{{ r.param_obj.zver.popis }}<span class="float-right" [innerHTML]="r.param_obj.zver | menaFormatInfo:r.param_obj.zver.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.zivel.hodnota > 0" class="clearfix">{{ r.param_obj.zivel.popis }}<span class="float-right" [innerHTML]="r.param_obj.zivel | menaFormatInfo:r.param_obj.zivel.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.odc.hodnota > 0" class="clearfix">{{ r.param_obj.odc.popis }}<span class="float-right" [innerHTML]="r.param_obj.odc | menaFormatInfo:r.param_obj.odc.hodnota"></span></div>
+                            <div *ngIf="r.param_obj.vlsk.hodnota > 0" class="clearfix">{{ r.param_obj.vlsk.popis }}<span class="float-right" [innerHTML]="r.param_obj.vlsk | menaFormatInfo:r.param_obj.vlsk.hodnota"></span></div>                                    
+                        </ng-template>
+                        
+                    </div>
+                    <h5 *ngIf="r.pplatby.length" class="vagl mt-4">{{ 'SROVNANI.PLATBY' | translate }}</h5>                    
+					<div *ngIf="r.pplatby.length">
+						<span *ngFor="let pl of r.pplatby" class="" >
+							<button *ngIf="pl.value" class="btn btn-sm mt-1 mr-1" type="button"
+								[class.btn-primary]="data.platba === pl.key" [class.btn-outline-primary]="data.platba !== pl.key"
+								(click)="data.platba = pl.key">
+								{{ pl.key }} x <strong><span [innerHTML]="pl.value | telefonFormat"></span>&nbsp;{{ 'FORM.KC' | translate }}</strong>
+							</button>
+						</span>
+                    </div>
+                    <div *ngIf="show_doc === true">
+                        <h5 *ngIf="r.dokumenty.length" class="vagl mt-4">{{ 'SROVNANI.DOKUMENTY' | translate }}</h5>
+                        <ul *ngIf="r.dokumenty.length" class="fa-ul">
+                            <li *ngFor="let dok of r.dokumenty">
+                                <a class="" href="{{ dok.url }}" target="_pdf_dok"><span class="fa-li" ><i class="text-danger far fa-file-pdf"></i></span> {{ dok.nazev }}</a>
+                            </li>
+                        </ul>
+                    </div>					
+				</div>
+			</div>
+        </div>    
