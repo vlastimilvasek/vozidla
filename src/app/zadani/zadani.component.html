@@ -276,7 +276,7 @@
 
     <fieldset #zadani_osoby ngModelGroup="zadani_osoby">
     <div id="udaje_osoby"></div>
-    <div [hidden]="!subform_vozidlo">
+    <div [hidden]="!subformVozidlo">
         <h4 class="vagl text-center">{{ 'ZADANI.OSOBY.TITLE' | translate }}</h4>
         <div class="row mb-4 pt-4">
             <div class="{{ layout.grid.column }}">
@@ -320,14 +320,14 @@
                             typeaheadOptionField="psc"	
                             placeholder="{{ 'ADRESA.PSC.PLACEHOLDER' | translate }}"
                             autocomplete="off"
-                            (ngModelChange)="obecList(true)"
+                            (ngModelChange)="obecList(true, $event)"
                             [(ngModel)]="data.pojistnik.adresa.psc" #psc="ngModel" TextNumberMin="10000" TextNumberMax="79999" required>
                     </div>
                     <small [hidden]="psc.valid || (psc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
                         {{ 'FORM.VALIDATION.REQUIRED' | translate }}
                     </small>
                 </div>
-                <div class="form-group row" *ngIf="data.pojistnik.adresa.psc >= 10000">
+                <div class="form-group row" *ngIf="0+data.pojistnik.adresa.psc >= 10000">
                     <label class="{{ layout.grid.label }} col-form-label"
                         placement="right"
                         triggers="mouseenter:mouseleave"
@@ -413,7 +413,7 @@
                     <div class="{{ layout.grid.input }}">
                             <input name="ic" class="form-control" type="text"
                                 placeholder="{{ 'OSOBA.IC.PLACEHOLDER' | translate }}"
-                                [(ngModel)]="data.ic" #ic="ngModel" IC required />					
+                                [(ngModel)]="data.pojistnik.ic" #ic="ngModel" IC required />					
                     </div>
                     <small [hidden]="ic.valid || (ic.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
                         {{ 'OSOBA.IC.REQUIRED' | translate }}
@@ -523,7 +523,7 @@
                                 typeaheadOptionField="psc"	
                                 placeholder="{{ 'ADRESA.PSC.PLACEHOLDER' | translate }}"
                                 autocomplete="off"
-                                (ngModelChange)="pobecList(true)"
+                                (ngModelChange)="pobecList(true, $event)"
                                 [(ngModel)]="data.provozovatel.adresa.psc" #ppsc="ngModel" required>
                         </div>
                         <small [hidden]="ppsc.valid || (ppsc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">

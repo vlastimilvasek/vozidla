@@ -37,11 +37,11 @@
 			<span class="nav-number">1</span>
 		</ng-template>
     	<form #f="ngForm" (ngSubmit)="submitZadani(f);" novalidate [class.submitted]="f.submitted">
-			<app-zadani [(data)]="data" [(filters)]="filters" [(offers)]="offers" [layout]="layout" [parent_form]="f" required></app-zadani>
+			<app-zadani [(data)]="data" [(filters)]="filters" [(offers)]="offers" [layout]="layout" [parentForm]="f" required></app-zadani>
 			<div class="row align-items-center" *ngIf="data.pojisteni">
 				<div class="col-md-2"></div>  			
 				<div class="col-md-8 text-center">
-					<button type="submit" class="btn btn-success btn-lg mt-4" [ngx-scroll-to]="'app'" [ngx-scroll-to-duration]="200">
+					<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
 						{{ 'FORM.BUTTONS.SROVNAT' | translate }} 
 						<i class="fa fa-chevron-right" *ngIf="kalk_aktivni === false"></i>
 						<i class="fa fa-spinner fa-spin" *ngIf="kalk_aktivni === true"></i>
@@ -136,7 +136,7 @@
 			{{ 'POJISTKA.NENIPRODUKT' | translate }}&nbsp;&nbsp;
 			<button type="button" class="btn btn-outline-secondary btn-sm"
 				(click)="offers.length ? (staticTabs.tabs[1].active = true) : (staticTabs.tabs[0].active = true)"
-				[ngx-scroll-to]="'app'" [ngx-scroll-to-duration]="200">
+				[ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
 				<i class="fa fa-chevron-left"></i> {{ 'FORM.BUTTONS.ZPET' | translate }}
 			</button>			
 		</div>
@@ -144,7 +144,7 @@
 		<div *ngIf="data.produkt">
 			<app-udaje [(data)]="data" [(r)]="vprodukt" [layout]="layout" [submitted]="u.submitted" required></app-udaje>
 			<div class="form-group text-center">
-				<button type="submit" class="btn btn-success btn-lg mt-4" [ngx-scroll-to]="'app'" [ngx-scroll-to-duration]="200">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
 					{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
 				</button>
 			</div>
@@ -162,7 +162,7 @@
 		<form #ob="ngForm" (ngSubmit)="submitObjekt(ob)" novalidate [class.submitted]="ob.submitted">
 			<app-objekt required></app-objekt>
 			<div class="form-group text-center">
-				<button type="submit" class="btn btn-success btn-lg mt-4" [ngx-scroll-to]="'app'" [ngx-scroll-to-duration]="200">
+				<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
 					{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
 				</button>
 			</div>
@@ -206,7 +206,7 @@
 			</div>			
 			<app-pojisteny *ngIf="data.pojistenypojistnik !== true" [(data)]="data.pojisteny" [layout]="layout" [submitted]="o.submitted" required></app-pojisteny>
     	<div class="form-group text-center">
-			<button type="submit" class="btn btn-success btn-lg mt-4" [ngx-scroll-to]="'app'" [ngx-scroll-to-duration]="200">
+			<button type="submit" class="btn btn-success btn-lg mt-4" [ngxScrollTo]="'app'" [ngxScrollToDuration]="200">
 				{{ 'FORM.BUTTONS.DALE' | translate }} <i class="fa fa-chevron-right"></i>
 			</button>
 		</div>
@@ -219,7 +219,7 @@
 		</ng-template>          
     	<h3>{{ 'FORM.TABS.REKAPITULACE' | translate }}</h3> 
     	<form #r="ngForm" (ngSubmit)="sjednat(r)" novalidate [class.submitted]="r.submitted">
-            <div *ngIf="osobni_form.valid">
+            <div *ngIf="osobniForm.valid">
                 <app-rekapitulace [(data)]="data" [layout]="layout" [r]="vprodukt" required></app-rekapitulace>
                 <div *ngIf="layout.form_r.error" class="text-center alert alert-danger mt-4 p2-4" role="alert">
                     {{ 'REKAPITULACE.SJEDNAT.ERROR' | translate }}&nbsp;&nbsp;	

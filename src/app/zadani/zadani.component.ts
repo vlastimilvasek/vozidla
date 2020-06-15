@@ -18,7 +18,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
     @Input() data;
     @Input() offers;
     @Input() filters;
-    @Input() parent_form;
+    @Input() parentForm;
     @Input() layout;
 
 
@@ -38,8 +38,8 @@ export class ZadaniComponent implements OnInit, OnChanges {
     };
     submitted = false;
     druh = 0;
-    posun_vozidlo;
-    subform_vozidlo;
+    posunVozidlo;
+    subformVozidlo;
 
     constructor(private paramsService: ParamsService, private scrollService: ScrollToService) { }
 
@@ -72,7 +72,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
         this.offers = [];
         setTimeout(() =>  {
             this.data.pojisteni = pojisteni;
-            this.posun_vozidlo = this.parent_form.form.controls.zadani.controls.zadani_vozidlo.valid;
+            this.posunVozidlo = this.parentForm.form.controls.zadani.controls.zadani_vozidlo.valid;
         }, 10);
         const config: ScrollToConfigOptions = {
             target: 'udaje_vozidlo',
@@ -99,9 +99,19 @@ export class ZadaniComponent implements OnInit, OnChanges {
         }
     }
 
-    obecList( change: boolean = false ): void {
-        if (change) { this.data.pojistnik.adresa.cast_obce_id = ''; this.data.pojistnik.adresa.adr_id = ''; }
-        if (this.data.pojistnik.adresa.psc >= 10000) {
+    obecList( change: boolean = false, event = null ): void {
+        let psc = 0;
+        if (change) {
+            this.data.pojistnik.adresa.cast_obce_id = '';
+            this.data.pojistnik.adresa.adr_id = '';
+            this.data.pojistnik.adresa.psc = psc = event;
+        } else {
+            psc = Number(this.data.pojistnik.adresa.psc);
+        }
+        // console.log('obecList - change', change);
+        // console.log('obecList - event', event);
+        // console.log('obecList - psc', psc);
+        if ( psc >= 10000) {
             const options = [];
             this.paramsService.getHledej('obec-cast', '', this.data.pojistnik.adresa).subscribe( casti => {
                 console.log('casti obce : ', casti);
@@ -117,9 +127,19 @@ export class ZadaniComponent implements OnInit, OnChanges {
         }
     }
 
-    pobecList( change: boolean = false ): void {
-        if (change) { this.data.provozovatel.adresa.cast_obce_id = ''; this.data.provozovatel.adresa.adr_id = ''; }
-        if (this.data.provozovatel.adresa.psc >= 10000) {
+    pobecList( change: boolean = false, event = null ): void {
+        let psc = 0;
+        if (change) {
+            this.data.provozovatel.adresa.cast_obce_id = '';
+            this.data.provozovatel.adresa.adr_id = '';
+            this.data.provozovatel.adresa.psc = psc = event;
+        } else {
+            psc = Number(this.data.provozovatel.adresa.psc);
+        }
+        console.log('pobecList - change', change);
+        console.log('pobecList - event', event);
+        console.log('pobecList - psc', psc);
+        if ( psc >= 10000) {
             const options = [];
             this.paramsService.getHledej('obec-cast', '', this.data.provozovatel.adresa).subscribe( casti => {
                 console.log('p casti obce : ', casti);
@@ -150,7 +170,9 @@ export class ZadaniComponent implements OnInit, OnChanges {
             observer.next(this.data.provozovatel.adresa.psc);
         }).pipe(mergeMap((token: string) => this.paramsService.getHledej('psc', token, this.data.provozovatel.adresa)));
 
-        this.submitted = this.parent_form.submitted;
+        this.submitted = this.parentForm.submitted;
+        this.obecList();
+        this.pobecList();
 
         if ( [1, 11, 2].indexOf(this.data.vozidlo.druh) !== -1 || this.data.vozidlo.druh === null ) {
             this.druh = null;
@@ -161,13 +183,11 @@ export class ZadaniComponent implements OnInit, OnChanges {
     ngOnChanges() {
         setTimeout(() => {
             this.modelList();
-            // this.obecList(false);
-            // this.pobecList(false);
         });
 
-        this.subform_vozidlo = (this.data.pojisteni) ? this.parent_form.form.controls.zadani.controls.zadani_vozidlo.valid : false;
-        console.log('posun vozidlo : ', this.posun_vozidlo + ' ' + this.subform_vozidlo);
-        if (this.subform_vozidlo && this.posun_vozidlo !== this.subform_vozidlo) {
+        this.subformVozidlo = (this.data.pojisteni) ? this.parentForm.form.controls.zadani.controls.zadani_vozidlo.valid : false;
+        console.log('posun vozidlo : ', this.posunVozidlo + ' ' + this.subformVozidlo);
+        if (this.subformVozidlo && this.posunVozidlo !== this.subformVozidlo) {
             const config: ScrollToConfigOptions = {
                 target: 'udaje_osoby',
                 duration: 400,
@@ -176,7 +196,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
             setTimeout(() => {
                 this.scrollService.scrollTo(config);
             }, 1000);
-            this.posun_vozidlo = this.subform_vozidlo;
+            this.posunVozidlo = this.subformVozidlo;
         }
 
     }

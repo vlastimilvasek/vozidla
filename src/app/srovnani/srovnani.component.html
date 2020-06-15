@@ -4,13 +4,13 @@
         <alert type="info" *ngIf="layout.prvniNapoveda" [dismissOnTimeout]="8000" [dismissible]="true">
             <i class="fas fa-chevron-down"></i> {{ 'SROVNANI.COLLAPSEHINT' | translate }}
         </alert> 
-		<!-- šablona odpovědnost občanská : detail -->
+		<!-- šablona : detail -->
 		<div [@list]="offers.length" *ngIf="!layout.table">
 			<div @items *ngFor="let r of offers" class="card mb-3" [class.selected]="data.produkt === r.id">
 			</div>
 		</div>
 
-		<!-- šablona odpovědnost občanská : tabulka -->
+		<!-- šablona : tabulka -->
 		<div [@list]="offers.length" *ngIf="layout.table" class="card table">
 			<div class="card-header">
 				<div class="row align-items-center">

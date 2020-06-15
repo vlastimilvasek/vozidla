@@ -12,7 +12,7 @@ import { IVozidla, ISrovnani } from './_interfaces/vozidla';
 import { ParamsService } from './_services/params.service';
 import { DataService } from './_services/data.service';
 import { SrovnaniComponent } from './srovnani/srovnani.component';
-import { TabsetComponent } from 'ngx-bootstrap';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
 @Component({
     selector: 'app-main',
@@ -31,50 +31,49 @@ export class AppComponent implements OnInit, OnDestroy {
     filters;
     layout = {
         grid: {
-            'column' : 'col-lg-6',
-            'label' : 'col-sm-5',
-            'input' : 'col-sm-7',
-            'offset' : 'offset-sm-5',
-            'label2' : 'col-lg-8 col-sm-5',
-            'input2' : 'col-lg-4 col-sm-7',
-            'column1' : 'order-3 order-md-0 col-md-7 col-lg-6 col-xl-7',
-            'column2' : 'order-2 col-md-5 col-lg-5 offset-lg-1 col-xl-4',
-            'info1' : 'col-sm-3 col-md-12',
-            'info2' : 'col-sm-9 col-md-12',
+            column : 'col-lg-6',
+            label : 'col-sm-5',
+            input : 'col-sm-7',
+            offset : 'offset-sm-5',
+            label2 : 'col-lg-8 col-sm-5',
+            input2 : 'col-lg-4 col-sm-7',
+            column1 : 'order-3 order-md-0 col-md-7 col-lg-6 col-xl-7',
+            column2 : 'order-2 col-md-5 col-lg-5 offset-lg-1 col-xl-4',
+            info1 : 'col-sm-3 col-md-12',
+            info2 : 'col-sm-9 col-md-12',
         },
         table : true,
         produktCollapsed : {},
         prvniNapoveda : true,
         form_r : {
-            'loading' : false,
-            'error' : false
+            loading : false,
+            error : false
         }
     };
     kalk_aktivni = false;
     layouthelper = 'none';
     filtrCollapsed = true;
-    URL = { 'adresa' : '' };
+    URL = { adresa : '' };
     mail_odeslan = false;
     data_loading = false;
     valueChangesSubscriber = [];
-    pojisteni_text = {'OBODP': 'občanská odpovědnost', 'ZAMODP' : 'odpovědnost zaměstnance'}; // jen pro jméno PDFka
-    @ViewChild('f', { static: true }) zadani_form: any;
-    @ViewChild('filtry', { static: true }) filtr_form: any;
-    @ViewChild('kalk_email', { static: true }) email_form: any;
-    @ViewChild('o', { static: true }) osobni_form: any;
-    @ViewChild('u', { static: true }) udaje_form: any;
-    @ViewChild('ob', { static: true }) objekt_form: any;
+    pojisteniText = {OBODP: 'občanská odpovědnost', ZAMODP : 'odpovědnost zaměstnance'}; // jen pro jméno PDFka
+    @ViewChild('f', { static: true }) zadaniForm: any;
+    @ViewChild('filtry', { static: true }) filtrForm: any;
+    @ViewChild('kalk_email', { static: true }) emailForm: any;
+    @ViewChild('o', { static: true }) osobniForm: any;
+    @ViewChild('u', { static: true }) udajeForm: any;
+    @ViewChild('ob', { static: true }) objektForm: any;
     @ViewChild(SrovnaniComponent, { static: true }) srovnaniCmp: SrovnaniComponent;
-    @ViewChild('debugModal', { static: true }) debug_modal: any;
+    @ViewChild('debugModal', { static: true }) debugModal: any;
     @ViewChild('filtrHint', { static: true }) filtrHint: any;
     @ViewChild('stepTabs', { static: true }) staticTabs: TabsetComponent;
-    @ViewChild('layoutHelper', { static: false }) layout_helper: any;
-    // version = require('../../package.json').version;
+    @ViewChild('layoutHelper', { static: false }) layoutHelper: any;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         // console.log(event.charCode);
-        if (event.charCode === 272 || event.charCode === 240) { this.debug_modal.show(); }
+        if (event.charCode === 272 || event.charCode === 240) { this.debugModal.show(); }
         if (event.charCode === 248 || event.charCode === 321) { this.layouthelper = this.layouthelper === 'none' ? '' : 'none'; }
     }
 
@@ -114,15 +113,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
     public openPDF(): void {
         const dd = pdfSrovnani.srovnani(this.offers);
-        pdfMake.createPdf(dd).download('nabídky - ' + this.pojisteni_text[this.data.pojisteni] + '.pdf');
+        pdfMake.createPdf(dd).download('nabídky - ' + this.pojisteniText[this.data.pojisteni] + '.pdf');
     }
 
     submitZadani(form: any): void {
-        // console.log(this.zadani_form.value);
-        // this.zadani_form.reset();
+        // console.log(this.zadaniForm.value);
+        // this.zadaniForm.reset();
         if (form.valid) {
             // console.log('Form Data - zadani: ');
-            // console.log(this.zadani_form);
+            // console.log(this.zadaniForm);
             // this.data = Object.assign(this.data, form.value);
             // this.kalkuluj();
             this.staticTabs.tabs[1].active = true;
@@ -187,7 +186,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     tabSrovnani(): void {
-        if (!this.offers.length && !this.kalk_aktivni && this.zadani_form.valid) {
+        if (!this.offers.length && !this.kalk_aktivni && this.zadaniForm.valid) {
             this.kalkuluj();
         }
     }
@@ -203,7 +202,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     kalkuluj(): void {
         const produkt = this.data.produkt;
-        const produkty_id = [];
+        const produktyId = [];
         this.kalk_aktivni = true;
         this.filtrCollapsed = true;
         this.vprodukt = null;
@@ -229,7 +228,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 srovnani.items.forEach( (x) => {
                     const pplatby = [];
                     // console.log('APP kalkuluj - produkt params ', JSON.stringify(x.params) );
-                    produkty_id.push(x.id);
+                    produktyId.push(x.id);
                     if ( partneri.indexOf(x.pojistovna) === -1 ) {
                         partneri.push( x.pojistovna );
                         partnobj[x.pojistovna] = (partnobj_old[x.pojistovna] !== undefined) ? partnobj_old[x.pojistovna] : true;
@@ -316,8 +315,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
                 this.offers = this.nvoffers = items;
                 // console.log('APP kalkuluj - produkt : ', produkt );
-                // console.log('APP kalkuluj - produkty_id : ', produkty_id );
-                if (produkt && produkty_id.indexOf(produkt) !== -1) { // zkusím zachovat vybraný produkt při přepočtu
+                // console.log('APP kalkuluj - produktyId : ', produktyId );
+                if (produkt && produktyId.indexOf(produkt) !== -1) { // zkusím zachovat vybraný produkt při přepočtu
                     this.data.produkt = produkt;
                     this.vprodukt = this.offers.filter( x => x.id === this.data.produkt)[0];
                 }
@@ -338,7 +337,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.offers = this.offers.filter( x => Number(x.param_obj.zdr.hodnota) >= this.filters.min_zdr);
         // úprava produktu podle požadavku na rozšíření
         this.offers.forEach( (x) => {
-            let cena_pri = 0;
+            let extrasCena = 0;
             const pripojisteni = {};
             let extras = ['skl', 'asn', 'asp', 'nv', 'pa', 'ur', 'zav', 'vb', 'ren', 'gc', 'zver', 'zivel', 'odc', 'vlsk'];
             let i = 0;
@@ -396,8 +395,8 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-            Object.keys(pripojisteni).forEach(key => { cena_pri += pripojisteni[key]; });
-            // console.log('APP filtruj_nabidky - cena pripojisteni : ', x.id + ': ' + cena_pri);
+            Object.keys(pripojisteni).forEach(key => { extrasCena += pripojisteni[key]; });
+            // console.log('APP filtruj_nabidky - cena pripojisteni : ', x.id + ': ' + extrasCena);
             // console.log('APP filtruj_nabidky - ceny pripojisteni : ', pripojisteni);
             const pplatby = [];
             x.vypocet = {};
@@ -405,11 +404,11 @@ export class AppComponent implements OnInit, OnDestroy {
                 // Výpočet plateb
                 // console.log('APP filtruj_nabidky - platby key : ', key);
                 if ( ['AXA', 'ČSOB'].indexOf(x.pojistovna) !== -1 ) {
-                    if (x.platby[key] > 0) { x.platby[key] = Math.floor( ( Math.floor(x.pov_cena * x.pov_sleva * x.k_platby[Number(key)]) + x.pov_fix + cena_pri) * x.c_platby[Number(key)]); }
-                    x.vypocet[key] = 'floor( floor(' + x.pov_cena + '*' + x.pov_sleva + '*' + x.k_platby[Number(key)] + ') + ' + x.pov_fix + '+' + cena_pri + ')*' + x.c_platby[Number(key)] + ')';                        
+                    if (x.platby[key] > 0) { x.platby[key] = Math.floor( ( Math.floor(x.pov_cena * x.pov_sleva * x.k_platby[Number(key)]) + x.pov_fix + extrasCena) * x.c_platby[Number(key)]); }
+                    x.vypocet[key] = 'floor( floor(' + x.pov_cena + '*' + x.pov_sleva + '*' + x.k_platby[Number(key)] + ') + ' + x.pov_fix + '+' + extrasCena + ')*' + x.c_platby[Number(key)] + ')';                        
                 } else {
-                    if (x.platby[key] > 0) { x.platby[key] = Math.round( ((x.pov_cena * x.pov_sleva * x.k_platby[Number(key)]) + x.pov_fix + cena_pri) * x.c_platby[Number(key)]); }
-                    x.vypocet[key] = 'round( (' + x.pov_cena + '*' + x.pov_sleva + '*' + x.k_platby[Number(key)] + ') + ' + x.pov_fix + '+' + cena_pri + ')*' + x.c_platby[Number(key)] + ')';
+                    if (x.platby[key] > 0) { x.platby[key] = Math.round( ((x.pov_cena * x.pov_sleva * x.k_platby[Number(key)]) + x.pov_fix + extrasCena) * x.c_platby[Number(key)]); }
+                    x.vypocet[key] = 'round( (' + x.pov_cena + '*' + x.pov_sleva + '*' + x.k_platby[Number(key)] + ') + ' + x.pov_fix + '+' + extrasCena + ')*' + x.c_platby[Number(key)] + ')';
                 }
                 if (x.platby[key] > 0) { pplatby.push({ key : Number(key), value : x.platby[key]}); }
             });
@@ -438,7 +437,8 @@ export class AppComponent implements OnInit, OnDestroy {
             this.offers = this.offers.filter( x => Number(x.param_obj.spol.hodnota) <= (this.filters.spoluuc ? 0 : 100000) );
         }
         console.log('offers po filtrech : ', this.offers);
-        function sortp(c) { return function(a, b) { return a.platby[c] - b.platby[c]; }; } // console.log(a.platby[c] + ' ' + b.platby[c]);
+        function sortp(c: number) { return (a, b) => { return a.platby[c] - b.platby[c]; }; }
+        // console.log(a.platby[c] + ' ' + b.platby[c]);
         this.offers.sort(sortp(this.data.platba));
     }
 
@@ -452,13 +452,13 @@ export class AppComponent implements OnInit, OnDestroy {
     initData(data: IVozidla): void {
         this.data = data || {
             id: '',
-            pojisteni: this.route.snapshot.queryParams['pojisteni'] || null,
+            pojisteni: this.route.snapshot.queryParams.pojisteni || null,
             pojistovna: '',
             produkt: null,
             sjed_cislo: null,
             sjed_status: null,
-            sjed_datum: this.route.snapshot.queryParams['sjed_datum'] || new Date(),
-            pocatek: this.route.snapshot.queryParams['pocatek'] || new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+            sjed_datum: this.route.snapshot.queryParams.sjed_datum || new Date(),
+            pocatek: this.route.snapshot.queryParams.pocatek || new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
             konec: '',
             pojistne: null,
             provize: null,
@@ -522,8 +522,8 @@ export class AppComponent implements OnInit, OnDestroy {
                     cp : '',
                     adr_id : null
                 },
-                'kadresa' : false,
-                'kor_adresa' : {
+                kadresa : false,
+                kor_adresa : {
                     psc : null,
                     cast_obce_id : null,
                     obec : '',
@@ -535,33 +535,33 @@ export class AppComponent implements OnInit, OnDestroy {
             pojistenypojistnik: true,
             pojisteny: {
                 typ : 1,
-                'titul' : '',
-                'titul_za' : '',
-                'jmeno' : '',
-                'prijmeni' : '',
-                'spolecnost' : '',
-                'rc' : '',
-                'ic' : '',
-                'adresa' : {
-                    'psc' : '',
-                    'cast_obce_id' : '',
-                    'obec' : '',
-                    'ulice' : '',
-                    'cp' : '',
-                    'adr_id' : ''
+                titul : '',
+                titul_za : '',
+                jmeno : '',
+                prijmeni : '',
+                spolecnost : '',
+                rc : '',
+                ic : '',
+                adresa : {
+                    psc : '',
+                    cast_obce_id : '',
+                    obec : '',
+                    ulice : '',
+                    cp : '',
+                    adr_id : ''
                 },
             },
             pojistnikvlastnik: true,
             vlastnik: {
                 typ : 1,
-                'titul' : '',
-                'titul_za' : '',
-                'jmeno' : '',
-                'prijmeni' : '',
-                'spolecnost' : '',
-                'rc' : '',
-                'ic' : '',
-                'adresa' : {
+                titul : '',
+                titul_za : '',
+                jmeno : '',
+                prijmeni : '',
+                spolecnost : '',
+                rc : '',
+                ic : '',
+                adresa : {
                     psc : '',
                     cast_obce_id : null,
                     obec : '',
@@ -573,14 +573,14 @@ export class AppComponent implements OnInit, OnDestroy {
             pojistnikprovozovatel: true,
             provozovatel: {
                 typ : 1,
-                'titul' : '',
-                'titul_za' : '',
-                'jmeno' : '',
-                'prijmeni' : '',
-                'spolecnost' : '',
-                'rc' : '',
-                'ic' : '',
-                'adresa' : {
+                titul : '',
+                titul_za : '',
+                jmeno : '',
+                prijmeni : '',
+                spolecnost : '',
+                rc : '',
+                ic : '',
+                adresa : {
                     psc : '',
                     cast_obce_id : null,
                     obec : '',
@@ -597,43 +597,43 @@ export class AppComponent implements OnInit, OnDestroy {
             email: '',
             link: ''
         };
-        this.zadani_form.submitted = false;
+        this.zadaniForm.submitted = false;
     }
 
     ngOnInit() {
         // console.log( 'data z URL : ', this.route.snapshot.queryParams['data'] );
-        this.valueChangesSubscriber['f'] = this.filtr_form.valueChanges.pipe(debounceTime(500)).subscribe(form => {
+        this.valueChangesSubscriber['f'] = this.filtrForm.valueChanges.pipe(debounceTime(500)).subscribe(form => {
             // console.log( 'zmena filtrů : ', JSON.stringify(this.filters) );
             // console.log( 'zmena filtrů - length : ', Object.keys(this.filters).length );
             this.filtruj_nabidky();
             this.GAEvent('AUTA', 'Kalkulace', 'Filtrování nabídek', 1);
         });
 
-        this.valueChangesSubscriber['z'] = this.zadani_form.valueChanges.pipe(debounceTime(500)).subscribe(form => {
-            console.log('změna zadani_form');
-            this.zadani_form.submitted = false;
+        this.valueChangesSubscriber['z'] = this.zadaniForm.valueChanges.pipe(debounceTime(500)).subscribe(form => {
+            console.log('změna zadaniForm');
+            this.zadaniForm.submitted = false;
             this.offers = [];
             this.nvoffers = [];
-            if (this.zadani_form.valid) {
-                console.log('změna zadani_form, formulář platný a proto kalkuluji ...');
+            if (this.zadaniForm.valid) {
+                console.log('změna zadaniForm, formulář platný a proto kalkuluji ...');
                 this.kalkuluj();
             }
         });
 
-        this.valueChangesSubscriber['e'] = this.email_form.valueChanges.pipe(debounceTime(20)).subscribe(form => {
-            this.email_form.submitted = false;
+        this.valueChangesSubscriber['e'] = this.emailForm.valueChanges.pipe(debounceTime(20)).subscribe(form => {
+            this.emailForm.submitted = false;
         });
 
-        this.valueChangesSubscriber['u'] = this.udaje_form.valueChanges.pipe(debounceTime(20)).subscribe(form => {
-            this.udaje_form.submitted = false;
+        this.valueChangesSubscriber['u'] = this.udajeForm.valueChanges.pipe(debounceTime(20)).subscribe(form => {
+            this.udajeForm.submitted = false;
         });
 
-        this.valueChangesSubscriber['ob'] = this.objekt_form.valueChanges.pipe(debounceTime(20)).subscribe(form => {
-            this.udaje_form.submitted = false;
+        this.valueChangesSubscriber['ob'] = this.objektForm.valueChanges.pipe(debounceTime(20)).subscribe(form => {
+            this.udajeForm.submitted = false;
         });
 
-        this.valueChangesSubscriber['o'] = this.osobni_form.valueChanges.pipe(debounceTime(20)).subscribe(form => {
-            this.osobni_form.submitted = false;
+        this.valueChangesSubscriber['o'] = this.osobniForm.valueChanges.pipe(debounceTime(20)).subscribe(form => {
+            this.osobniForm.submitted = false;
         });
 
         this.resetFilters();
@@ -666,9 +666,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 // this.initData(input_data);
                 this.data =  Object.assign({}, this.data, input_data);
                 setTimeout(() =>  {
-                    // console.log('zadani_form form valid', this.zadani_form.form.valid );
+                    // console.log('zadaniForm form valid', this.zadaniForm.form.valid );
                     this.data_loading = false;
-                    if (this.zadani_form.valid) {
+                    if (this.zadaniForm.valid) {
                         this.kalkuluj();
                         this.staticTabs.tabs[1].active = true;
                     }
@@ -684,7 +684,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 // console.log(e);
             }
         }
-        // console.log(this.zadani_form.value);
+        // console.log(this.zadaniForm.value);
     }
     ngOnDestroy() {
         this.dataservice.data = this.data;
