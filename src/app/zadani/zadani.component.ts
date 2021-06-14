@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChild, ElementRef, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scrol
 
 // Data and Service
 import { ParamsService } from '../_services/params.service';
+import { INgxSelectOption } from 'ngx-select-ex';
 
 @Component({
     selector: 'app-zadani',
@@ -16,10 +17,9 @@ import { ParamsService } from '../_services/params.service';
 })
 export class ZadaniComponent implements OnInit, OnChanges {
     @Input() data;
-    @Input() offers;
-    @Input() filters;
     @Input() parentForm;
     @Input() layout;
+    @ViewChild('zadani_vozidlo', { static: true }) zadaniVozidlo: any;
 
 
     lists = {
@@ -29,6 +29,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
         rok_vyroby: [],
         palivo: [],
         uziti: [],
+        najezd: [],
         pojistnik: [],
         provozovatel: [],
         psc: [],
@@ -44,20 +45,11 @@ export class ZadaniComponent implements OnInit, OnChanges {
     constructor(private paramsService: ParamsService, private scrollService: ScrollToService) { }
 
     public vyberDruh( druh: number): void {
+        // console.log('ZADANI - vyberDruh: ', druh);
         this.submitted = false;
-        setTimeout(() =>  {
-            if (druh === 99) {
-                this.druh = druh;
-                this.data.vozidlo.druh = null;
-            } else {
-                if ( [1, 11, 2].indexOf(druh) !== -1 ) {
-                    this.druh = 0;
-                } else {
-                    this.druh = 99;
-                }
-                this.data.vozidlo.druh = druh;
-            }
-        }, 10);
+        this.data.vozidlo.druh = druh;
+        this.layout.controls.druh = ( [1, 11, 2].indexOf(this.data.vozidlo.druh) !== -1) ? this.data.vozidlo.druh : 99;
+
         const config: ScrollToConfigOptions = {
             target: 'pojisteni',
             duration: 400,
@@ -68,8 +60,6 @@ export class ZadaniComponent implements OnInit, OnChanges {
 
     public vyberPoj( pojisteni: string): void {
         this.submitted = false;
-        this.filters = {};
-        this.offers = [];
         setTimeout(() =>  {
             this.data.pojisteni = pojisteni;
             this.posunVozidlo = this.parentForm.form.controls.zadani.controls.zadani_vozidlo.valid;
@@ -87,7 +77,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
         if (this.data.vozidlo.znacka) {
             const options = [];
             const modely = this.paramsService.getModel().filter( opt => opt.znacka === this.data.vozidlo.znacka );
-            console.log(modely);
+            // console.log(modely);
             modely.forEach( opt => {
                 options.push( {
                     label: opt.label,
@@ -104,6 +94,7 @@ export class ZadaniComponent implements OnInit, OnChanges {
         if (change) {
             this.data.pojistnik.adresa.cast_obce_id = '';
             this.data.pojistnik.adresa.adr_id = '';
+            this.data.pojistnik.adresa.obec = '';
             this.data.pojistnik.adresa.psc = psc = event;
         } else {
             psc = Number(this.data.pojistnik.adresa.psc);
@@ -118,13 +109,22 @@ export class ZadaniComponent implements OnInit, OnChanges {
                 casti.forEach( opt => {
                     options.push( {
                         label: opt.nazev,
-                        value: opt.id
+                        value: opt.id,
+                        obec: opt.nazev_obce
                     });
                 });
-                if (casti.length === 1) { this.data.pojistnik.adresa.cast_obce_id = casti[0].id; }
+                if (casti.length === 1) {
+                    this.data.pojistnik.adresa.cast_obce_id = casti[0].id;
+                    this.data.pojistnik.adresa.obec = casti[0].nazev_obce;
+                }
                 this.lists.castiobce = options;
             });
         }
+    }
+
+    selectCoid(options: INgxSelectOption[], osoba: string): void {
+        // console.log('ZADANI selectCoid - event ', options);
+        this.data[osoba].adresa.obec = options[0].data.obec;
     }
 
     pobecList( change: boolean = false, event = null ): void {
@@ -132,13 +132,14 @@ export class ZadaniComponent implements OnInit, OnChanges {
         if (change) {
             this.data.provozovatel.adresa.cast_obce_id = '';
             this.data.provozovatel.adresa.adr_id = '';
+            this.data.provozovatel.adresa.obec = '';
             this.data.provozovatel.adresa.psc = psc = event;
         } else {
             psc = Number(this.data.provozovatel.adresa.psc);
         }
-        console.log('pobecList - change', change);
-        console.log('pobecList - event', event);
-        console.log('pobecList - psc', psc);
+        // console.log('pobecList - change', change);
+        // console.log('pobecList - event', event);
+        // console.log('pobecList - psc', psc);
         if ( psc >= 10000) {
             const options = [];
             this.paramsService.getHledej('obec-cast', '', this.data.provozovatel.adresa).subscribe( casti => {
@@ -146,21 +147,45 @@ export class ZadaniComponent implements OnInit, OnChanges {
                 casti.forEach( opt => {
                     options.push( {
                         label: opt.nazev,
-                        value: opt.id
+                        value: opt.id,
+                        obec: opt.nazev_obce,
                     });
                 });
-                if (casti.length === 1) { this.data.provozovatel.adresa.cast_obce_id = casti[0].id; }
+                if (casti.length === 1) {
+                    this.data.provozovatel.adresa.cast_obce_id = casti[0].id;
+                    this.data.provozovatel.adresa.obec = casti[0].nazev_obce;
+                }
                 this.lists.pcastiobce = options;
             });
         }
     }
 
-    ngOnInit() {
+    zmenaFormulare(change: boolean = true): void {
+        this.submitted = this.parentForm.submitted;
+        if (change) {
+            this.subformVozidlo = (this.data.pojisteni) ? this.parentForm.form.controls.zadani.controls.zadani_vozidlo.valid : 0;
+            // console.log('ZADANI posun vozidlo : ', this.posunVozidlo + ' ' + this.subformVozidlo);
+            if (this.subformVozidlo && this.posunVozidlo !== this.subformVozidlo) {
+                const config: ScrollToConfigOptions = {
+                    target: 'udaje_osoby',
+                    duration: 400,
+                    offset: -10
+                };
+                setTimeout(() => {
+                    this.scrollService.scrollTo(config);
+                }, 1000);
+                this.posunVozidlo = this.subformVozidlo;
+            }
+        }
+    }
+
+    nastavSeznamy(): void {
         this.lists.druh = this.paramsService.getDruhVozidla();
         this.lists.znacka = this.paramsService.getZnacka();
         this.lists.rok_vyroby = this.paramsService.getRokVyroby();
         this.lists.palivo = this.paramsService.getPalivo();
         this.lists.uziti = this.paramsService.getUziti();
+        this.lists.najezd = this.paramsService.getNajezd();
         this.lists.pojistnik = this.paramsService.getOsoby();
         this.lists.provozovatel = this.paramsService.getOsoby();
         this.lists.psc = Observable.create((observer: any) => {
@@ -170,34 +195,44 @@ export class ZadaniComponent implements OnInit, OnChanges {
             observer.next(this.data.provozovatel.adresa.psc);
         }).pipe(mergeMap((token: string) => this.paramsService.getHledej('psc', token, this.data.provozovatel.adresa)));
 
-        this.submitted = this.parentForm.submitted;
         this.obecList();
         this.pobecList();
-
-        if ( [1, 11, 2].indexOf(this.data.vozidlo.druh) !== -1 || this.data.vozidlo.druh === null ) {
-            this.druh = null;
-        } else  {
-            this.druh = 99;
+        this.modelList();
+        if (this.data.vozidlo.druh) {
+            this.layout.controls.druh = ([1, 11, 2].indexOf(this.data.vozidlo.druh) !== -1) ? this.data.vozidlo.druh : 99;
         }
     }
-    ngOnChanges() {
-        setTimeout(() => {
-            this.modelList();
-        });
 
-        this.subformVozidlo = (this.data.pojisteni) ? this.parentForm.form.controls.zadani.controls.zadani_vozidlo.valid : false;
-        console.log('posun vozidlo : ', this.posunVozidlo + ' ' + this.subformVozidlo);
-        if (this.subformVozidlo && this.posunVozidlo !== this.subformVozidlo) {
-            const config: ScrollToConfigOptions = {
-                target: 'udaje_osoby',
-                duration: 400,
-                offset: -10
-            };
-            setTimeout(() => {
-                this.scrollService.scrollTo(config);
-            }, 1000);
-            this.posunVozidlo = this.subformVozidlo;
-        }
 
+    ngOnInit() {
+        this.zmenaFormulare(false);
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+        for (const propName in changes) {
+            if (changes.hasOwnProperty(propName)) {
+                const change = changes[propName];
+                console.log('ZADANI ngOnChanges ', propName);
+                switch (propName) {
+                    case 'data': {
+                        this.nastavSeznamy();
+                        console.log('ZADANI - ngOnChanges data ', this.data);
+                        if (change.previousValue != change.currentValue) {
+                            // console.log('puvodni ', JSON.stringify(change.previousValue));
+                            // console.log('nova ', JSON.stringify(change.previousValue));
+                        }
+
+
+                        break;
+
+                    }
+                    case 'parentForm': {
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 }

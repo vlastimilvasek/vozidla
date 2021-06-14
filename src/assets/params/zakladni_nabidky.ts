@@ -4,16 +4,17 @@ export const DRUH = [
     { value: 2,  'label': 'Motocykl' },
     { value: 22, 'label': 'Čtyřkolka / tříkolka' },
     { value: 3,  'label': 'Přípojné vozidlo, vozík' },
-    { value: 6,  'label': 'Obytný automobil do 8000 kg' },
-    { value: 7,  'label': 'Sanitní automobil' },
     { value: 4,  'label': 'Autobus' },
     { value: 5,  'label': 'Nákladní vozidlo' },
+    { value: 6,  'label': 'Obytný automobil do 8000 kg' },
+    { value: 7,  'label': 'Sanitní automobil' },
     { value: 8,  'label': 'Tahač' },
     { value: 9,  'label': 'Traktor s RZ' },
     { value: 10, 'label': 'Traktor bez RZ' }
 ];
 
 export const ROKY = [
+    { value: 2020, 'label': '2020' },
     { value: 2019, 'label': '2019' },
     { value: 2018, 'label': '2018' },
     { value: 2017, 'label': '2017' },
@@ -58,6 +59,30 @@ export const UZITI = [
     { value: 6, 'label': 'autoškola' },
     { value: 7, 'label': 'historické vozidlo' },
     { value: 8, 'label': 'veterán' }
+];
+
+export const NAJEZD = [
+    { value: 5, 'label': 'do 5 000 km' },
+    { value: 6, 'label': '6 000 km' },
+    { value: 7, 'label': '7 000 km' },
+    { value: 8, 'label': '8 000 km' },
+    { value: 9, 'label': '9 000 km' },
+    { value: 10, 'label': '10 000 km' },
+    { value: 11, 'label': '11 000 km' },
+    { value: 12, 'label': '12 000 km' },
+    { value: 13, 'label': '13 000 km' },
+    { value: 14, 'label': '14 000 km' },
+    { value: 15, 'label': '15 000 km' },
+    { value: 16, 'label': '16 000 km' },
+    { value: 17, 'label': '17 000 km' },
+    { value: 18, 'label': '18 000 km' },
+    { value: 19, 'label': '19 000 km' },
+    { value: 20, 'label': '20 000 km' },
+    { value: 21, 'label': '21 000 km' },
+    { value: 22, 'label': '22 000 km' },
+    { value: 23, 'label': '23 000 km' },
+    { value: 24, 'label': '24 000 km' },
+    { value: 25, 'label': '25 000 km a více' }
 ];
 
 export const OSOBY = [

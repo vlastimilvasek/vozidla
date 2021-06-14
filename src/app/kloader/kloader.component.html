@@ -1,16 +1,20 @@
-		<div class="mt-4 mx-auto text-center align-items-center alert alert-success row" style="max-width: 800px;">
-			<div class="col-3">
-				<i class="fa fa-3x fa-spinner fa-spin"></i>
+<div class="card mb-3">
+	<div class="card-body">
+		<div class="progress mb-4" [hidden]="layout.progress == 100" style="height: 3px;">
+			<div class="progress-bar bg-success" role="progressbar" [style.width.%]="layout.progress" aria-valuemin="0"	aria-valuemax="100"></div>
+		</div>
+		<div class="row d-flex justify-content-center">
+			<div *ngFor="let p of partners | keyvalue" class="col col-xs-2 col-sm-2 col-md text-center">
+				<img alt="{{ p.value.nazev }}" style="margin-bottom: -0.7rem" class="img-fluid"
+					src="{{ LOGA[p.value.nazev] }}">
+				<span *ngIf="p.value.kalk === 0" class="fa fa-spinner fa-spin" role="status"
+					aria-hidden="true"></span>
+				<span *ngIf="p.value.kalk === 0" class="sr-only">Kalkuluji...</span>
+				<span *ngIf="p.value.kalk === 1" class="fa fa-check text-success" role="status"
+					aria-hidden="true"></span>
+				<span *ngIf="p.value.kalk === -1" class="fa fa-exclamation-triangle text-danger" role="status"
+					aria-hidden="true"></span>
 			</div>
-			<div class="col vagl">{{ 'SROVNANI.KALKULUJI' | translate }}</div>
-			<div id="crossfade" class="col hidden-md-down">
-				<img src="{{ LOGA['AXA Assistance'] }}">
-				<img src="{{ LOGA['ČSOB Pojišťovna'] }}">
-				<img src="{{ LOGA['Direct'] }}">
-				<img src="{{ LOGA['Allianz'] }}">
-				<img src="{{ LOGA['Uniqa'] }}">
-				<img src="{{ LOGA['Slavia'] }}">
-				<img src="{{ LOGA['Colonnade'] }}">
-				<img src="{{ LOGA['Generali'] }}">				
-			</div>
-		</div>   
+		</div>
+	</div>
+</div>

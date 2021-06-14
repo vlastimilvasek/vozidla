@@ -42,7 +42,8 @@
 		},
         "VALIDATION" : {
 	        "REQUIRED": "Vyplňte prosím toto pole.",
-	        "RADIOREQUIRED": "Vyberte prosím jednu z voleb.",
+			"RADIOREQUIRED": "Vyberte prosím jednu z voleb.",
+			"SELECT": "Vyberte prosím jednu variantu z nabídky.",			
 	        "MAX": "Maximální hodnota je {{value}}.",
 	        "MIN": "Minimální hodnota je {{value}}.",
 			"RANGE": "Povolená hodnota je {{min}} - {{max}}.",
@@ -233,7 +234,12 @@
 			"PLACEHOLDER": "např. 80",
 	        "HINT": ""
         },
-        "HMOTNOST": {    
+        "NAJEZD": {    
+	        "LABEL": "Nájezd",
+			"PLACEHOLDER": "např. 10 000 km",
+	        "HINT": "Vyberte, kolik km ročně s vozidlem asi tak najedete. Některé pojišťovny (Pillow, Allianz) stanovují cenu s ohledem na nájezd. Počítejte s nutností evidovat a dokládat stav tachometru."
+        },
+		"HMOTNOST": {    
 	        "LABEL": "Celková hmotnost",
 			"PLACEHOLDER": "např. 1890",
 	        "HINT": "Uveďte nejvyšší technicky přípustnou hmotnost. Ve velkém technickém průkazu se jedná o řádek F1."

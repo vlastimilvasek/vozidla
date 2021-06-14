@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+// import { catchError, map, tap } from 'rxjs/operators';
 import { ISrovnani, ISelectItem, ISjednaniResp } from '../_interfaces/vozidla';
-import { ROKY, DRUH, PALIVO, UZITI, OSOBY } from '../../assets/params/zakladni_nabidky';
+import { ROKY, DRUH, PALIVO, UZITI, OSOBY, NAJEZD } from '../../assets/params/zakladni_nabidky';
 import { ZNACKA, MODEL } from '../../assets/params/znacka_model';
 
 @Injectable()
@@ -28,12 +29,22 @@ export class ParamsService {
     getUziti() {
         return UZITI;
     }
+    getNajezd() {
+        return NAJEZD;
+    }
     getZnacka() {
         return ZNACKA;
     }
 
     getModel() {
         return MODEL;
+    }
+
+    getNewId() {
+        return this.http.get('https://www.srovnavac.eu/api/vozidla/app/noveid')
+        .pipe(
+            // catchError()
+        );
     }
 
     getKalkulace(id) {
@@ -43,9 +54,10 @@ export class ParamsService {
             })
         };
         const data = {'id': id};
-        // console.log('id kalkulace ', data);
-        return this.http.post('https://www.srovnavac.eu/api/odpovednost/app/kalkulace', data, httpOptions)
+        // console.log('PARAMS.SERVICE getKalkulace - id ', data);
+        return this.http.post('https://www.srovnavac.eu/api/vozidla/app/kalkulace', data, httpOptions)
         .pipe(
+            // map(resp => { console.log('PARAMS.SERVICE - getKalkulace ', resp ); resp = this.cast(resp, CVozidla); console.log('PARAMS.SERVICE - getKalkulace po zprac ', resp ); })
             // catchError()
         );
     }
@@ -60,6 +72,22 @@ export class ParamsService {
         .pipe(
             // catchError()
         );
+    }
+
+    getPartnerKalkulace(partner, data) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+        console.log('ParamsService - PartnerKalkulace -  https://www.srovnavac.eu/api/vozidla/' + partner + '/kalkulace');
+        console.log('s daty');
+        console.log( JSON.stringify(data) );
+        return this.http.post<any>('https://www.srovnavac.eu/api/vozidla/' + partner + '/kalkulace', data, httpOptions)
+            .pipe(
+                // map( (data) => console.log('PARAMS.SERVICE - getSrovnani ', data ) )
+                // catchError()
+            );
     }
 
     getSrovnani(data) {

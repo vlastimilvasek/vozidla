@@ -3,72 +3,72 @@
 	<h3 class="head-title">{{ 'ZADANI.DRUH.TITLE' | translate }}</h3>
 	<div class="form-group text-center mb-4">
 		<div class="btn-group btn-group-toggle" data-toggle="buttons">
-		  <label class="btn btn-outline-primary" (click)="vyberDruh(1);" [class.active]="data.vozidlo.druh === 1">
-		    <input name="vozidlo.druh" [(ngModel)]="data.vozidlo.druh" #Druh="ngModel" [value]="1" type="radio" required />
+			<label class="btn btn-outline-primary" (click)="vyberDruh(1)" [class.active]="layout.controls.druh === 1">
+		    <input name="druh" [(ngModel)]="layout.controls.druh" #DruhL="ngModel" [value]="1" type="radio" required />
 		    <i class="icon shape-car72 fa-3x"></i><br />
 		    {{ 'ZADANI.DRUH.AUTO' | translate }}
 		  </label>
-		  <label class="btn btn-outline-primary" (click)="vyberDruh(11);" [class.active]="data.vozidlo.druh === 11">
-		    <input name="vozidlo.druh" [(ngModel)]="data.vozidlo.druh" #Druh="ngModel" [value]="4" type="radio" required />
+			<label class="btn btn-outline-primary" (click)="vyberDruh(11)" [class.active]="layout.controls.druh === 11">
+		    <input name="druh" [(ngModel)]="layout.controls.druh" #DruhL="ngModel" [value]="11" type="radio" required />
 		    <i class="icon shape-car72 fa-3x"></i><br />
 		    {{ 'ZADANI.DRUH.N1' | translate }}
 		  </label>
-          <label class="btn btn-outline-primary" (click)="vyberDruh(2);" [class.active]="data.vozidlo.druh === 2">
-		    <input name="vozidlo.druh" [(ngModel)]="data.vozidlo.druh" #Druh="ngModel" [value]="2" type="radio" required />
+			<label class="btn btn-outline-primary" (click)="vyberDruh(2)" [class.active]="layout.controls.druh === 2">
+		    <input name="druh" [(ngModel)]="layout.controls.druh" #DruhL="ngModel" [value]="2" type="radio" required />
 		    <i class="icon shape-motorcycle3 fa-3x"></i><br />
 		    {{ 'ZADANI.DRUH.MOTO' | translate }}
 		  </label>
-          <label class="btn btn-outline-primary" (click)="vyberDruh(99);" [class.active]="druh === 99">
-		    <input name="vozidlo.druh" [(ngModel)]="druh" #Druh="ngModel" [value]="99" type="radio" required />
+			<label class="btn btn-outline-primary" [class.active]="layout.controls.druh === 99">
+		    <input name="druh" [(ngModel)]="layout.controls.druh" #DruhL="ngModel" [value]="99" type="radio" />
 		    <i class="icon shape-delivery22 fa-3x"></i><br />
 		    {{ 'ZADANI.DRUH.OSTATNI' | translate }}
 		  </label>
-        </div>
-		<br /><small [hidden]="Druh.valid || (Druh.pristine && !submitted)" class="text-danger text-center">
+		</div>
+		<br /><small [hidden]="DruhL.valid  || (DruhL.pristine && !submitted)" class="text-danger text-center">
 			{{ 'FORM.VALIDATION.RADIOREQUIRED' | translate }}
-		</small>		
+		</small>
 	</div>
 
     <div id="pojisteni"></div>
-    <div class="mb-4 row justify-content-center">
-        <div class="{{ layout.grid.column }}" [hidden]="druh !== 99">
-            <div class="form-group row">
-                <label class="{{ layout.grid.label }}  col-form-label"
+    <ng-template #hintVozidloDruh><div class="text-left" [innerHtml]="'VOZIDLO.DRUH.HINT' | translate"></div></ng-template>
+	<div class="mb-4 row justify-content-center" [hidden]="layout.controls.druh < 3 || layout.controls.druh == 11">
+		<div class="{{ layout.grid.column }}">
+			<div class="form-group row">
+				<label class="{{ layout.grid.label }}  col-form-label"
                     placement="right"
-                    triggers="mouseenter:mouseleave"	
-                    popover="{{ 'VOZIDLO.DRUH.HINT' | translate }}">
+                    triggers="mouseenter:mouseleave"
+                    [tooltip]="('VOZIDLO.DRUH.HINT' | translate) === '' ? '' : hintVozidloDruh">
                     {{ 'VOZIDLO.DRUH.LABEL' | translate }}
-                </label>		
-                <div class="{{ layout.grid.input }}"> 
-                    <ngx-select
-                        name = "vozidlo.druh" class="" #Druh1="ngModel"
-                        placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
-                        [items]="lists.druh"
-                        [allowClear]="false"
-                        [(ngModel)]="data.vozidlo.druh"
-                        required>
-                    </ngx-select>			
-                </div>
-                <small [hidden]="(Druh1.valid || Druh1.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                    <i *ngIf="('VOZIDLO.DRUH.HINT' | translate) !== ''" class="far fa-question-circle label-hint"></i>
+                </label>
+				<div class="{{ layout.grid.input }}">
+					<ngx-select name="vozidlo.druh" class="" #Druh1="ngModel"
+						placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}" [items]="lists.druh" [allowClear]="false"
+						[(ngModel)]="data.vozidlo.druh" (select)="vyberDruh(Druh1.value)" required>
+					</ngx-select>
+				</div>
+				<small [hidden]="(Druh1.valid || Druh1.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
                     {{ 'FORM.VALIDATION.REQUIRED' | translate }}
-                </small>		
-            </div>
-        </div>
-    </div>
+                </small>
+			</div>
+		</div>
+	</div>
     <div [hidden]="!data.vozidlo.druh">
         <h4 class="vagl text-center">{{ 'ZADANI.POJISTENI.TITLE' | translate }}</h4>
         <div class="form-group text-center mb-4">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-outline-primary" (click)="vyberPoj('POV');" [class.active]="data.pojisteni === 'POV'">
                 <input name="pojisteni" [(ngModel)]="data.pojisteni" #Pojisteni="ngModel" value="POV" type="radio" required />
-                <i class="icon shape-o-odpovednost fa-3x"></i><br />
+                <i class="icon shape-pov fa-3x"></i><br />
                 {{ 'POJISTKA.POJISTENI.POV' | translate }}
             </label>
+            <!--
             <label class="btn btn-outline-primary" (click)="vyberPoj('HAV');" [class.active]="data.pojisteni === 'HAV'" *ngIf="(data.vozidlo.druh === 1 || data.vozidlo.druh === 11)">
                 <input name="pojisteni" [(ngModel)]="data.pojisteni" #Pojisteni="ngModel" value="HAV" type="radio" required />
-                <i class="icon shape-o-obcanska fa-3x"></i><br />
+                <i class="icon shape-hav fa-3x"></i><br />
                 {{ 'POJISTKA.POJISTENI.HAV' | translate }}
             </label>
+            -->
             </div>
             <br /><small [hidden]="Pojisteni.valid || (Pojisteni.pristine && !submitted)" class="text-danger text-center">
                 {{ 'FORM.VALIDATION.RADIOREQUIRED' | translate }}
@@ -78,7 +78,7 @@
 
     <fieldset #zadani_vozidlo id="zadani_vozidlo" ngModelGroup="zadani_vozidlo">
     <div id="udaje_vozidlo"></div>
-    <div [hidden]="!data.pojisteni">
+    <div [hidden]="!data.pojisteni || !data.vozidlo.druh">
         <h4 class="vagl text-center">{{ 'ZADANI.VOZIDLO.TITLE' | translate }}</h4>
         <div class="row mb-4 pt-4">
             <div class="{{ layout.grid.column }}">
@@ -267,7 +267,30 @@
                         <span *ngIf="Hmotnost.errors?.TextNumberMax" translate [translateParams]="{value: '3 500'}">FORM.VALIDATION.MAX</span>
                         <span *ngIf="Hmotnost.errors?.TextNumberMin" translate [translateParams]="{value: '10'}">FORM.VALIDATION.MIN</span>
                     </small>
-                </div>                     
+                </div>
+                <div class="form-group row" *ngIf="data.vozidlo.druh === 1 || data.vozidlo.druh === 11">
+                    <label class="{{ layout.grid.label }}  col-form-label"
+                        placement="right"
+                        triggers="mouseenter:mouseleave"
+                        popoverTitle="{{ 'VOZIDLO.NAJEZD.LABEL' | translate }}"		
+                        popover="{{ 'VOZIDLO.NAJEZD.HINT' | translate }}">
+                        {{ 'VOZIDLO.NAJEZD.LABEL' | translate }}
+                    </label>		
+                    <div class="{{ layout.grid.input }}"> 
+                        <ngx-select
+                            name = "vozidlo.najezd" class="" #Najezd="ngModel"
+                            placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
+                            noResultsFound="{{ 'FORM.SELECT.NOTFOUND' | translate }}"
+                            [items]="lists.najezd"
+                            [allowClear]="false"
+                            [(ngModel)]="data.vozidlo.najezd" 
+                            required>
+                        </ngx-select>			
+                    </div>
+                    <small [hidden]="Najezd.valid || (Najezd.pristine && !submitted)" class="text-danger offset-sm-5 {{ layout.grid.input }}">
+                        {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                    </small>		
+                </div>                                     
                                         
             </div>
         </div>
@@ -337,40 +360,21 @@
                     </label>		
                     <div class="{{ layout.grid.input }}"> 
                         <ngx-select
-                            name = "pojistnik.adresa.cast_obce_id" class="" #Castobce="ngModel"
+                            name = "pojistnik.adresa.cast_obce_id" class="ngx-select" #Castobce="ngModel"
                             placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
                             [items]="lists.castiobce"
                             [allowClear]="false"
+                            (selectionChanges)="selectCoid($event, 'pojistnik')"
                             [(ngModel)]="data.pojistnik.adresa.cast_obce_id" 
                             required>
                         </ngx-select>			
                     </div>
                     <small [hidden]="Castobce.valid || (Castobce.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
-                        {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                        {{ 'FORM.VALIDATION.SELECT' | translate }}
                     </small>		
                 </div>                           
-                <div class="form-group row">
-                    <div class="text-center col">   		
-                        <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                        <label class="btn btn-outline-primary" [class.active]="data.over_bm === true">
-                            <input name="over_bm" [(ngModel)]="data.over_bm" [value]="true" type="radio" required />
-                            {{ 'POJISTKA.OVER_BM.ANO' | translate }}
-                        </label>
-                        <label class="btn btn-outline-primary" [class.active]="data.over_bm === false">
-                            <input name="over_bm" [(ngModel)]="data.over_bm" [value]="false" type="radio" />
-                            {{ 'POJISTKA.OVER_BM.NE' | translate }}
-                        </label>
-                        </div>
-                    <label class=""
-                        placement="top"
-                        triggers="mouseenter:mouseleave"		
-                        popover="{{ 'POJISTKA.OVER_BM.HINT' | translate }}">
-                        &nbsp;&nbsp;<i class="far fa-question-circle"></i>
-                    </label>                           
-                    </div>                 		
-                </div>
 
-                <div class="form-group row" *ngIf="data.pojistnik.typ < 3 && data.over_bm">
+                <div class="form-group row" *ngIf="data.pojistnik.typ < 4">
                     <label class="{{ layout.grid.label }} col-form-label"
                         placement="right"
                         triggers="mouseenter:mouseleave"
@@ -386,7 +390,7 @@
                         {{ 'FORM.VALIDATION.REQUIRED' | translate }}
                     </small>			
                 </div>	
-                <div class="form-group row" *ngIf="data.pojistnik.typ < 4 && data.over_bm">
+                <div class="form-group row" *ngIf="data.pojistnik.typ < 4">
                     <label class="{{ layout.grid.label }} col-form-label"
                         placement="right"
                         triggers="mouseenter:mouseleave"
@@ -402,7 +406,7 @@
                         {{ 'OSOBA.RC.REQUIRED' | translate }}
                     </small>
                 </div>
-                <div class="form-group row" *ngIf="data.pojistnik.typ > 2  && data.over_bm">
+                <div class="form-group row" *ngIf="data.pojistnik.typ > 2">
                     <label class="{{ layout.grid.label }} col-form-label"
                         placement="right"
                         triggers="mouseenter:mouseleave"
@@ -544,6 +548,7 @@
                                 placeholder="{{ 'FORM.SELECT.DEFAULT' | translate }}"
                                 [items]="lists.pcastiobce"
                                 [allowClear]="false"
+                                (selectionChanges)="selectCoid($event, 'provozovatel')"
                                 [(ngModel)]="data.provozovatel.adresa.cast_obce_id" 
                                 required>
                             </ngx-select>			
@@ -551,6 +556,56 @@
                         <small [hidden]="Pcastobce.valid || (Pcastobce.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
                             {{ 'FORM.VALIDATION.REQUIRED' | translate }}
                         </small>		
+                    </div>
+
+                    <div class="form-group row" *ngIf="data.provozovatel.typ < 4">
+                        <label class="{{ layout.grid.label }} col-form-label"
+                            placement="right"
+                            triggers="mouseenter:mouseleave"
+                            popoverTitle="{{ 'OSOBA.JMENO.LABEL' | translate }}"
+                            popover="{{ 'OSOBA.JMENO.HINT' | translate }}">
+                            {{ 'OSOBA.JMENO.LABEL' | translate }}
+                        </label>
+                        <div class="{{ layout.grid.input }}">
+                            <input name="provozovatel.jmeno" class="form-control" type="text" placeholder="{{ 'OSOBA.JMENO.PLACEHOLDER' | translate }}" 
+                                [(ngModel)]="data.provozovatel.jmeno" #Pjmeno="ngModel" required />
+                        </div>
+                        <small [hidden]="Pjmeno.valid || (Pjmeno.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+                            {{ 'FORM.VALIDATION.REQUIRED' | translate }}
+                        </small>			
+                    </div>	
+                    <div class="form-group row" *ngIf="data.provozovatel.typ < 4">
+                        <label class="{{ layout.grid.label }} col-form-label"
+                            placement="right"
+                            triggers="mouseenter:mouseleave"
+                            popoverTitle="{{ 'OSOBA.RC.LABEL' | translate }}"		
+                            popover="{{ 'OSOBA.RC.HINT' | translate }}">
+                            {{ 'OSOBA.RC.LABEL' | translate }}
+                        </label>
+                        <div class="{{ layout.grid.input }}">
+                            <input name="provozovatel.rc" class="form-control" type="text" placeholder="{{ 'OSOBA.RC.PLACEHOLDER' | translate }}"
+                                [(ngModel)]="data.provozovatel.rc" #Prc="ngModel" RC required />
+                        </div>
+                        <small [hidden]="Prc.valid || (Prc.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+                            {{ 'OSOBA.RC.REQUIRED' | translate }}
+                        </small>
+                    </div>
+                    <div class="form-group row" *ngIf="data.provozovatel.typ > 2">
+                        <label class="{{ layout.grid.label }} col-form-label"
+                            placement="right"
+                            triggers="mouseenter:mouseleave"
+                            popoverTitle="{{ 'OSOBA.IC.LABEL' | translate }}"		
+                            popover="{{ 'OSOBA.IC.HINT' | translate }}">
+                            {{ 'OSOBA.IC.LABEL' | translate }}
+                        </label>
+                        <div class="{{ layout.grid.input }}">
+                                <input name="provozovatel.ic" class="form-control" type="text"
+                                    placeholder="{{ 'OSOBA.IC.PLACEHOLDER' | translate }}"
+                                    [(ngModel)]="data.provozovatel.ic" #Pic="ngModel" IC required />					
+                        </div>
+                        <small [hidden]="Pic.valid || (Pic.pristine && !submitted)" class="text-danger {{ layout.grid.offset }} {{ layout.grid.input }}">
+                            {{ 'OSOBA.IC.REQUIRED' | translate }}
+                        </small>	
                     </div>                      
                 </div>    
 

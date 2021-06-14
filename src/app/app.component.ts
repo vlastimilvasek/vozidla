@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 import { TranslateService } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 import { LOGO_200x100 } from '../assets/params/loga';
@@ -8,10 +9,10 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as pdfSrovnani from './_pdf-templates/srovnani';
 
 // Data and Service
-import { IVozidla, ISrovnani } from './_interfaces/vozidla';
+import { IVozidla, Vozidla, ISrovnani } from './_interfaces/vozidla';
 import { ParamsService } from './_services/params.service';
 import { DataService } from './_services/data.service';
-import { SrovnaniComponent } from './srovnani/srovnani.component';
+import { ZadaniComponent } from './zadani/zadani.component';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
 @Component({
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
     vprodukt;
     translate: TranslateService;
     offers = [];
-    nvoffers = [];
+    offersAll = [];
     filters;
     layout = {
         grid: {
@@ -43,41 +44,68 @@ export class AppComponent implements OnInit, OnDestroy {
             info2 : 'col-sm-9 col-md-12',
         },
         table : true,
+        helper : 'none',
         produktCollapsed : {},
+        filtrCollapsed : true,
+        controls : {
+            druh: null
+        },
         prvniNapoveda : true,
         form_r : {
             loading : false,
             error : false
-        }
+        },
+        progress: 0,
+        kalkulaceAktivni : false,
+        kalkulaceMailOdeslan : false,
+        dataNacitani : false
     };
-    kalk_aktivni = false;
-    layouthelper = 'none';
-    filtrCollapsed = true;
+
     URL = { adresa : '' };
-    mail_odeslan = false;
-    data_loading = false;
+    filtrHelper = {
+        debug: true,
+        filtry: []
+    };
+
+    partners = {
+        allianz :{kod:'axa',nazev:'Allianz',kalk:0},
+        axa     :{kod:'axa',nazev:'AXA',kalk:0}
+    };
+
+    /*
+,
+        cpp     :{kod:'cpp',nazev:'ČPP',kalk:0},
+        csob    :{kod:'csob',nazev:'ČSOB',kalk:0},
+        direct  :{kod:'direct',nazev:'Direct',kalk:0},
+        gcp     :{kod:'gcp',nazev:'Generali ČP',kalk:0},
+        hvp     :{kod:'hvp',nazev:'HVP',kalk:0},
+        pillow  :{kod:'pillow',nazev:'Pillow',kalk:0},
+        pvzp    :{kod:'pvzp',nazev:'PVZP',kalk:0},
+        slavia  :{kod:'slavia',nazev:'Slavia',kalk:0},    
+    */
     valueChangesSubscriber = [];
-    pojisteniText = {OBODP: 'občanská odpovědnost', ZAMODP : 'odpovědnost zaměstnance'}; // jen pro jméno PDFka
+    pojisteniText = {POV: 'povinné ručení', HAV : 'havarijní pojištění'}; // jen pro jméno PDFka
     @ViewChild('f', { static: true }) zadaniForm: any;
     @ViewChild('filtry', { static: true }) filtrForm: any;
     @ViewChild('kalk_email', { static: true }) emailForm: any;
     @ViewChild('o', { static: true }) osobniForm: any;
     @ViewChild('u', { static: true }) udajeForm: any;
     @ViewChild('ob', { static: true }) objektForm: any;
-    @ViewChild(SrovnaniComponent, { static: true }) srovnaniCmp: SrovnaniComponent;
+    @ViewChild(ZadaniComponent, { static: true }) zadaniCmp: ZadaniComponent;
     @ViewChild('debugModal', { static: true }) debugModal: any;
     @ViewChild('filtrHint', { static: true }) filtrHint: any;
     @ViewChild('stepTabs', { static: true }) staticTabs: TabsetComponent;
-    @ViewChild('layoutHelper', { static: false }) layoutHelper: any;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         // console.log(event.charCode);
-        if (event.charCode === 272 || event.charCode === 240) { this.debugModal.show(); }
-        if (event.charCode === 248 || event.charCode === 321) { this.layouthelper = this.layouthelper === 'none' ? '' : 'none'; }
+        if (event.key === 'Đ' || event.key === 'ð') { this.debugModal.show(); }
+        if (event.key === 'Ł' || event.key === 'ø') { this.layout.helper = this.layout.helper === 'none' ? '' : 'none'; }
     }
 
-    constructor(translate: TranslateService, public dataservice: DataService, private paramsService: ParamsService, private route: ActivatedRoute, private router: Router) {
+    constructor(translate: TranslateService, public dataService: DataService, private paramsService: ParamsService,
+        private scrollService: ScrollToService, private route: ActivatedRoute, private router: Router) {
+
         this.translate = translate;
         this.translate.addLangs(['cs', 'en']);
         this.translate.setDefaultLang('cs');
@@ -95,7 +123,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 .subscribe( resp => {
                     // console.log('poslat na email resp ', resp);
                     if (resp) {
-                        this.mail_odeslan = true;
+                        this.layout.kalkulaceMailOdeslan = true;
                     }
                 });
             }
@@ -103,7 +131,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     GAEvent(cat: string, label: string, action: string, val: number): void {
-        (<any>window).ga('send', 'event', {
+        (window as any).ga('send', 'event', {
             eventCategory: cat,
             eventLabel: label,
             eventAction: action,
@@ -119,12 +147,19 @@ export class AppComponent implements OnInit, OnDestroy {
     submitZadani(form: any): void {
         // console.log(this.zadaniForm.value);
         // this.zadaniForm.reset();
+        this.zadaniCmp.submitted = true;
         if (form.valid) {
             // console.log('Form Data - zadani: ');
             // console.log(this.zadaniForm);
             // this.data = Object.assign(this.data, form.value);
-            // this.kalkuluj();
             this.staticTabs.tabs[1].active = true;
+            const config: ScrollToConfigOptions = {
+                target: 'app',
+                duration: 200,
+                offset: 0
+            };
+            this.scrollService.scrollTo(config);
+            this.kalkuluj();
         }
     }
 
@@ -171,7 +206,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     zmenPojisteni(pojisteni: string): void {
         this.offers = [];
-        this.nvoffers = [];
+        this.offersAll = [];
         this.filters = {};
         this.data.pojisteni = pojisteni;
         console.log('zmenPojisteni - filters : ', this.filters);
@@ -186,7 +221,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     tabSrovnani(): void {
-        if (!this.offers.length && !this.kalk_aktivni && this.zadaniForm.valid) {
+        // console.log('APP - tabSrovnani ', !this.offers.length  && !this.layout.kalkulaceAktivni);
+        if (!this.offers.length && !this.layout.kalkulaceAktivni && this.zadaniForm.valid) {
             this.kalkuluj();
         }
     }
@@ -200,141 +236,186 @@ export class AppComponent implements OnInit, OnDestroy {
         return true;
     }
 
+    nastavProdukt(x) {
+        const pplatby = [];
+        // console.log('APP nastavProdukt - produkt params ', JSON.stringify(x.params) );
+        if ( Object.keys(this.layout.produktCollapsed).indexOf(x.id) === -1 ) {
+            this.layout.produktCollapsed[x.id] = true;
+        }
+        Object.keys(x.platby).forEach(key => {
+            if (x.platby[key] > 0 && this.filters.platby.indexOf(Number(key)) === -1) { this.filters.platby.push(Number(key)); }
+            if (x.platby[key] > 0) { pplatby.push({ key : Number(key), value : x.platby[key]}); }
+        });
+        x.pplatby = pplatby;
+
+        // kontrola připojištění - extra
+        const types = ['radio', 'select'];
+        // console.log('pocet extras : ', this.r.extra.length );
+        if (x.extra.length) {
+            const extra = x.extra.filter( e => types.indexOf( e.typ ) >= 0 );
+            x.extra = [];
+            extra.forEach( (e) => {
+                if (Object.keys(e).indexOf( 'hodnota' )) {
+                    if (this.IsJsonString(e.hodnota)) {
+                        e.hodnota = JSON.parse(e.hodnota);
+                        if (Object.keys(e.hodnota).indexOf( 'options' )) {  // uprava options na pole
+                            const opt = [];
+                            Object.keys(e.hodnota.options).forEach( (o) => {
+                                opt.push(e.hodnota.options[o]);
+                            });
+                            e.hodnota.options = opt;
+                        }
+                        x.extra.push(e);
+                    } else {
+                        console.log('chybný objekt extras : ', e.kod );
+                    }
+
+                }
+            });
+
+        console.log('APP nastavProdukt - extra : ', x.extra );
+        }
+        // nastavení parametrů podle odkazu na extra
+        Object.keys(x.params).forEach(key => {
+            if (x.params[key].typ === 'link') {
+                const kod = x.params[key].hodnota.split('.')[1];
+                // console.log('APP kalkuluj - extra kod : ', kod );
+                const extra = x.extra.filter(e => e.kod === kod)[0];
+                // console.log('APP kalkuluj - extra : ', extra );
+                if (typeof extra === 'object' && extra !== null) {
+                    // jedno připojištění má vliv na víc parametrů
+                    if (typeof extra.hodnota.linked === 'object' && extra.hodnota.linked !== null) {
+                        x.params[key].options = extra.hodnota.linked.filter(e => e.kod === key)[0].options;
+                    } else {
+                        x.params[key].options = extra.hodnota.options;
+                    }
+                    x.params[key].default = extra.hodnota.default;
+                    if ( typeof extra.hodnota.default === 'object' && extra.hodnota.default !== null ) {
+                        x.params[key].hodnota = Number(extra.hodnota.default[key]);
+                    } else {
+                        x.params[key].hodnota = Number(extra.hodnota.default);
+                    }
+
+                }
+            } else if (x.params[key].typ === 'number') {  // nastavení parametrů podle typu
+                x.params[key].hodnota = Number(x.params[key].hodnota);
+            } else if (x.params[key].typ === 'bool') {
+                x.params[key].hodnota = Number(x.params[key].hodnota);
+                // console.log('APP kalkuluj - param bool : ', JSON.stringify(x.params[key]) );
+            }
+        });
+
+        const params = [];
+        x.param_obj = x.params;
+        Object.keys(x.params).forEach(key => {
+            params.push(x.params[key]);
+        });
+        x.params = params;
+        return x;
+    }
+
     kalkuluj(): void {
         const produkt = this.data.produkt;
         const produktyId = [];
-        this.kalk_aktivni = true;
-        this.filtrCollapsed = true;
+        this.layout.kalkulaceAktivni = true;
+        this.layout.filtrCollapsed = true;
         this.vprodukt = null;
         this.data.produkt = null;
         this.offers = [];
-        this.nvoffers = [];
-        this.paramsService.getSrovnani(this.data)
-            // .map( (i) => { console.log('getSrovnani', i); return i; } )
-            .subscribe( srovnani => {
-                this.srovnani = srovnani;
-                this.data.id = srovnani.id;
-                this.URL.adresa = window.location.origin + window.location.pathname + '/?id=' + srovnani.id;
+        this.offersAll = [];
+        this.layout.progress = 1;
+        let prubeh = Object.keys(this.partners).length;
 
-                const items = [];
-                const partneri = [];
-                const partnobj = {};
-                const partnobj_old = this.filters.partnobj || {};  // uchování nastavení při pře-kalkulaci
-                const platby = [];
+        for(let i = 1; i <= 100; i++) {
+            setTimeout(() => {
+                this.layout.progress = prubeh ? i : 100;
+            }, i*100);
+        }
+        // this.data.id = srovnani.id;
+        this.URL.adresa = window.location.origin + window.location.pathname + '?id=' + this.data.id;
 
-                this.kalk_aktivni = false;
-                console.log('APP kalkuluj - srovnani ', this.srovnani );
+        const items = [];
+        const partneri = [];
+        const partnobj = {};
+        const partnobjOld = this.filters.partnobj || {};  // uchování nastavení při pře-kalkulaci
+        this.filters.platby = [];
 
-                srovnani.items.forEach( (x) => {
-                    const pplatby = [];
-                    // console.log('APP kalkuluj - produkt params ', JSON.stringify(x.params) );
-                    produktyId.push(x.id);
-                    if ( partneri.indexOf(x.pojistovna) === -1 ) {
-                        partneri.push( x.pojistovna );
-                        partnobj[x.pojistovna] = (partnobj_old[x.pojistovna] !== undefined) ? partnobj_old[x.pojistovna] : true;
-                    }
-                    if ( Object.keys(this.layout.produktCollapsed).indexOf(x.id) === -1 ) {
-                        this.layout.produktCollapsed[x.id] = true;
-                    }
-                    Object.keys(x.platby).forEach(function(key) {
-                        if (x.platby[key] > 0 && platby.indexOf(Number(key)) === -1) { platby.push(Number(key)); }
-                        if (x.platby[key] > 0) { pplatby.push({ key : Number(key), value : x.platby[key]}); }
-                    });
-                    x.pplatby = pplatby;
+        Object.keys(this.partners).forEach(pk => {
+            console.log(pk);
+            this.partners[pk].kalk = 0;
+            this.paramsService.getPartnerKalkulace(pk, this.data).subscribe(
+            resp => {
+                console.log(resp);
+                prubeh -= 1;
+                this.partners[pk].kalk = 1;
+                if (resp.kalkulace && Object.keys(resp.produkty).length) {
+                    Object.keys(resp.produkty).forEach(r => {
+                        // kazdy produkt:
+                        let x = resp.produkty[r];
+                        x = this.nastavProdukt(x);
+                        items.push(x);
 
-                    // kontrola připojištění - extra
-                    const types = ['radio', 'select'];
-                    // console.log('pocet extras : ', this.r.extra.length );
-                    if (x.extra.length) {
-                        const extra = x.extra.filter( e => types.indexOf( e.typ ) >= 0 );
-                        x.extra = [];
-                        extra.forEach( (e) => {
-                            if (Object.keys(e).indexOf( 'hodnota' )) {
-                                if (this.IsJsonString(e.hodnota)) {
-                                    e.hodnota = JSON.parse(e.hodnota);
-                                    if (Object.keys(e.hodnota).indexOf( 'options' )) {  // uprava options na pole
-                                        const opt = [];
-                                        Object.keys(e.hodnota.options).forEach( (o) => {
-                                            opt.push(e.hodnota.options[o]);
-                                        });
-                                        e.hodnota.options = opt;
-                                    }
-                                    x.extra.push(e);
-                                } else {
-                                    console.log('chybný objekt extras : ', e.kod );
-                                }
-
-                            }
-                        });
-
-                    console.log('APP kalkuluj - extra : ', x.extra );
-                    }
-                    // nastavení parametrů podle odkazu na extra
-                    Object.keys(x.params).forEach(function(key) {
-                        if (x.params[key].typ === 'link') {
-                            const kod = x.params[key].hodnota.split('.')[1];
-                            // console.log('APP kalkuluj - extra kod : ', kod );
-                            const extra = x.extra.filter(e => e.kod === kod)[0];
-                            // console.log('APP kalkuluj - extra : ', extra );
-                            if (typeof extra === 'object' && extra !== null) {
-                                // jedno připojištění má vliv na víc parametrů
-                                if (typeof extra.hodnota.linked === 'object' && extra.hodnota.linked !== null) {
-                                    x.params[key].options = extra.hodnota.linked.filter(e => e.kod === key)[0].options;
-                                } else {
-                                    x.params[key].options = extra.hodnota.options;
-                                }
-                                x.params[key].default = extra.hodnota.default;
-                                if ( typeof extra.hodnota.default === 'object' && extra.hodnota.default !== null ) {
-                                    x.params[key].hodnota = Number(extra.hodnota.default[key]);
-                                } else {
-                                    x.params[key].hodnota = Number(extra.hodnota.default);
-                                }
-
-                            }
-                        } else if (x.params[key].typ === 'number') {  // nastavení parametrů podle typu
-                            x.params[key].hodnota = Number(x.params[key].hodnota);
-                        } else if (x.params[key].typ === 'bool') {
-                            x.params[key].hodnota = Number(x.params[key].hodnota);
-                            // console.log('APP kalkuluj - param bool : ', JSON.stringify(x.params[key]) );
+                        produktyId.push(x.id);
+                        if ( partneri.indexOf(x.pojistovna) === -1 ) {
+                            partneri.push( x.pojistovna );
+                            partnobj[x.pojistovna] = (partnobjOld[x.pojistovna] !== undefined) ? partnobjOld[x.pojistovna] : true;
                         }
-                    });
 
-                    const params = [];
-                    x.param_obj = x.params;
-                    Object.keys(x.params).forEach(function(key) {
-                        params.push(x.params[key]);
-                    });
-                    x.params = params;
-                    items.push( Object.assign({}, x) );
-                });
-
-                this.filters.partneri = partneri;
-                this.filters.partnobj = partnobj;
-                this.filters.platby = platby;
-                items.sort(function(a, b) { return a.ordering - b.ordering; });
-
-                this.offers = this.nvoffers = items;
-                // console.log('APP kalkuluj - produkt : ', produkt );
-                // console.log('APP kalkuluj - produktyId : ', produktyId );
-                if (produkt && produktyId.indexOf(produkt) !== -1) { // zkusím zachovat vybraný produkt při přepočtu
-                    this.data.produkt = produkt;
-                    this.vprodukt = this.offers.filter( x => x.id === this.data.produkt)[0];
+                        this.filters.partneri = partneri;
+                        this.filters.partnobj = partnobj;
+                        // items.sort((a, b) => { return a.ordering - b.ordering; });
+                        // this.offers = this.offersAll = items;
+                        // console.log('APP kalkuluj - produktyId : ', produktyId );
+                        if (produkt && produktyId.indexOf(produkt) !== -1) { // zkusím zachovat vybraný produkt při přepočtu
+                            this.data.produkt = produkt;
+                            this.vprodukt = this.offers.filter( f => f.id === this.data.produkt)[0];
+                        }
+                    })
                 }
+                if (prubeh === 0) {
+                    this.dokonciKalkulaci(items);
+                }
+            },
+            error => {
+                prubeh -= 1;
+                this.partners[pk].kalk = -1;
+                if (prubeh === 0) {
+                    this.dokonciKalkulaci(items);
+                }
+                console.log('APP - kalkulace - error: ', error);
+            }
+            );
 
-                // setTimeout(() =>  { this.srovnaniCmp.priprav_data(); }, 1);
-                this.filtruj_nabidky();
-                if (this.layout.prvniNapoveda) { this.filtrHint.show(); }
-                setTimeout(() =>  { this.layout.prvniNapoveda = false;  }, 8000);
+        });
 
-            });
+        // po deseti sekundách zobraz dostupné výsledky, pakliže se už vše nestihlo
+        setTimeout(() => {
+            if (this.layout.kalkulaceAktivni) this.dokonciKalkulaci(items);
+        }, 100 * 100);
+    }
+
+    dokonciKalkulaci(items: any[]): void {
+        // filtrování nabídek se také spouští při změně filtrFormu - duplicita po kalkulaci
+        // console.log('APP - dokonciKalkulaci - partners: ', JSON.stringify(this.partners));
+        // console.log('APP - dokonciKalkulaci - kalkulaceAktivni: ', this.layout.kalkulaceAktivni);
+        this.layout.progress = 100;
+        if (this.layout.kalkulaceAktivni) {
+            this.offers = this.offersAll = items;
+            this.filtruj_nabidky();
+        }
+        this.layout.kalkulaceAktivni = false;
     }
 
     filtruj_nabidky(): void {
         // console.log('this.filters.partnobj : ', this.filters.partnobj);
-        console.log('APP filtruj_nabidky - offers před filtry : ', this.nvoffers);
-        this.offers = this.nvoffers.filter( x => this.filters.partnobj[x.pojistovna] > 0);
+        console.log('APP filtruj_nabidky - offers před filtry : ', this.offersAll);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry = []; this.filtrHelper.filtry.push({zacatek: this.offersAll.length}); }
+        this.offers = this.offersAll.filter( x => this.filters.partnobj[x.pojistovna] > 0);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({pojistovna: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.platby[this.data.platba]) > 0);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({platba: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.zdr.hodnota) >= this.filters.min_zdr);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({zdr: this.offers.length}); }
         // úprava produktu podle požadavku na rozšíření
         this.offers.forEach( (x) => {
             let extrasCena = 0;
@@ -415,28 +496,46 @@ export class AppComponent implements OnInit, OnDestroy {
             x.pripojisteni = pripojisteni;
             x.pplatby = pplatby;
         });
+        
         this.offers = this.offers.filter( x => Number(x.param_obj.skl.hodnota) >= this.data.extra.skl);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({skl: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.asn.hodnota) >= this.data.extra.asn);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({asn: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.asp.hodnota) >= this.data.extra.asp);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({asp: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.nv.hodnota) >= this.data.extra.nv);
-
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({nv: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.pa.hodnota) >= this.data.extra.pa);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({pa: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.ur.hodnota) >= this.data.extra.ur);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({ur: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.zav.hodnota) >= this.data.extra.zav);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({zav: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.vb.hodnota) >= this.data.extra.vb);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({vb: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.ren.hodnota) >= this.data.extra.ren);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({ren: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.gc.hodnota) >= this.data.extra.gc);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({gc: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.zver.hodnota) >= this.data.extra.zver);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({zver: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.zivel.hodnota) >= this.data.extra.zivel);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({zivel: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.odc.hodnota) >= this.data.extra.odc);
+        if (this.filtrHelper.debug) { this.filtrHelper.filtry.push({odc: this.offers.length}); }
         this.offers = this.offers.filter( x => Number(x.param_obj.vlsk.hodnota) >= this.data.extra.vlsk);
+        if (this.filtrHelper.debug) {
+            this.filtrHelper.filtry.push({vlsk: this.offers.length});
+            this.filtrHelper.filtry.push({konec: this.offers.length});
+            console.log('APP filtruj nabidky - debug filtru : ', this.filtrHelper.filtry);
+        }
 
         if (this.data.pojisteni === 'HAV') {
             this.offers = this.offers.filter( x => Number(x.param_obj.zdr.hodnota) >= this.filters.min_zdr);
             this.offers = this.offers.filter( x => Number(x.param_obj.maj.hodnota) >= this.filters.min_maj);
             this.offers = this.offers.filter( x => Number(x.param_obj.spol.hodnota) <= (this.filters.spoluuc ? 0 : 100000) );
         }
-        console.log('offers po filtrech : ', this.offers);
+        console.log('APP filtruj nabidky - offers po filtrech : ', this.offers);
         function sortp(c: number) { return (a, b) => { return a.platby[c] - b.platby[c]; }; }
         // console.log(a.platby[c] + ' ' + b.platby[c]);
         this.offers.sort(sortp(this.data.platba));
@@ -449,155 +548,9 @@ export class AppComponent implements OnInit, OnDestroy {
         };
     }
 
-    initData(data: IVozidla): void {
-        this.data = data || {
-            id: '',
-            pojisteni: this.route.snapshot.queryParams.pojisteni || null,
-            pojistovna: '',
-            produkt: null,
-            sjed_cislo: null,
-            sjed_status: null,
-            sjed_datum: this.route.snapshot.queryParams.sjed_datum || new Date(),
-            pocatek: this.route.snapshot.queryParams.pocatek || new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-            konec: '',
-            pojistne: null,
-            provize: null,
-            extra: {
-                asn : 0,
-                asp : 0,
-                skl : 0,
-                nv : 0,
-                pa: 0,
-                ur: 0,
-                zav: 0,
-                vb: 0,
-                ren: 0,
-                gc: 0,
-                zver: 0,
-                zivel: 0,
-                odc: 0,
-                vlsk: 0
-            },
-            over_bm: true,
-            bonus: null,
-            malus: null,
-            vozidlo: {
-                druh: null,
-                kategorie: null,
-                uziti: 1,
-                znacka: 195,
-                model: 19534,
-                specifikace: null,
-                barva: null,
-                objem_motoru: null,
-                vykon_motoru: null,
-                rok_vyroby: 2017,
-                stav_tachometr: null,
-                hmotnost: 1890,
-                pocet_dveri: null,
-                pocetsedadel: null,
-                palivo: 2,
-                cislo_reg: null,
-                cislotp: null,
-                vin: null
-            },
-            platba: 1,
-            pojistnik : {
-                typ : 1,
-                titul : '',
-                titul_za : '',
-                jmeno : '',
-                prijmeni : '',
-                spolecnost : '',
-                rc : '',
-                ic : '',
-                platce_dph : false,
-                telefon : '',
-                email : '',
-                adresa : {
-                    psc : null,
-                    cast_obce_id : null,
-                    obec : '',
-                    ulice : '',
-                    cp : '',
-                    adr_id : null
-                },
-                kadresa : false,
-                kor_adresa : {
-                    psc : null,
-                    cast_obce_id : null,
-                    obec : '',
-                    ulice : '',
-                    cp : '',
-                    adr_id : null
-                }
-            },
-            pojistenypojistnik: true,
-            pojisteny: {
-                typ : 1,
-                titul : '',
-                titul_za : '',
-                jmeno : '',
-                prijmeni : '',
-                spolecnost : '',
-                rc : '',
-                ic : '',
-                adresa : {
-                    psc : '',
-                    cast_obce_id : '',
-                    obec : '',
-                    ulice : '',
-                    cp : '',
-                    adr_id : ''
-                },
-            },
-            pojistnikvlastnik: true,
-            vlastnik: {
-                typ : 1,
-                titul : '',
-                titul_za : '',
-                jmeno : '',
-                prijmeni : '',
-                spolecnost : '',
-                rc : '',
-                ic : '',
-                adresa : {
-                    psc : '',
-                    cast_obce_id : null,
-                    obec : '',
-                    ulice : '',
-                    cp : '',
-                    adr_id : null
-                },
-            },
-            pojistnikprovozovatel: true,
-            provozovatel: {
-                typ : 1,
-                titul : '',
-                titul_za : '',
-                jmeno : '',
-                prijmeni : '',
-                spolecnost : '',
-                rc : '',
-                ic : '',
-                adresa : {
-                    psc : '',
-                    cast_obce_id : null,
-                    obec : '',
-                    ulice : '',
-                    cp : '',
-                    adr_id : null
-                },
-            },
-            poznamka: '',
-            promo_kod: '',
-            ziskatel: '',
-            id_sml: null,
-            ipadr: '',
-            email: '',
-            link: ''
-        };
-        this.zadaniForm.submitted = false;
+    initData(): void {
+        this.layout.controls.druh = null;
+        this.data = new Vozidla(null);
     }
 
     ngOnInit() {
@@ -605,7 +558,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.valueChangesSubscriber['f'] = this.filtrForm.valueChanges.pipe(debounceTime(500)).subscribe(form => {
             // console.log( 'zmena filtrů : ', JSON.stringify(this.filters) );
             // console.log( 'zmena filtrů - length : ', Object.keys(this.filters).length );
-            this.filtruj_nabidky();
+            if (this.offers.length) this.filtruj_nabidky();
             this.GAEvent('AUTA', 'Kalkulace', 'Filtrování nabídek', 1);
         });
 
@@ -613,10 +566,11 @@ export class AppComponent implements OnInit, OnDestroy {
             console.log('změna zadaniForm');
             this.zadaniForm.submitted = false;
             this.offers = [];
-            this.nvoffers = [];
+            this.offersAll = [];
+            this.zadaniCmp.zmenaFormulare();
             if (this.zadaniForm.valid) {
-                console.log('změna zadaniForm, formulář platný a proto kalkuluji ...');
-                this.kalkuluj();
+                // console.log('změna zadaniForm, formulář platný a proto kalkuluji ...');
+                // this.kalkuluj();
             }
         });
 
@@ -644,51 +598,47 @@ export class AppComponent implements OnInit, OnDestroy {
             time: ''
         };
 
-        this.initData(null);
+        this.data = new Vozidla(null);
 
-        let input_data = null;
+        let inputData = null;
         if (this.route.snapshot.queryParams['id'] !== undefined ) {
-            this.data_loading = true;
+            this.layout.dataNacitani = true;
             this.paramsService.getKalkulace( this.route.snapshot.queryParams['id'] )
             .subscribe( data => {
-                // console.log('data ', data);
-                try {
-                    input_data = data;
-                    if (input_data.pocatek) {
-                        input_data.pocatek = new Date(input_data.pocatek);
-                    }
-                    if (input_data.profese) {
-                        input_data.profese = input_data.profese.toString();
-                    }
-                } catch (e) {
-                    // console.log(e);
-                }
-                // this.initData(input_data);
-                this.data =  Object.assign({}, this.data, input_data);
+                console.log('APP - getKalkulace data ', data);
+                this.data = new Vozidla(data);
+                // this.data =  Object.assign({}, this.data, inputData);
                 setTimeout(() =>  {
-                    // console.log('zadaniForm form valid', this.zadaniForm.form.valid );
-                    this.data_loading = false;
+                    this.layout.dataNacitani = false;
                     if (this.zadaniForm.valid) {
                         this.kalkuluj();
                         this.staticTabs.tabs[1].active = true;
                     }
-                }, 50);
+                }, 2000);
             });
-        } else if (this.route.snapshot.queryParams['data'] !== undefined ) {
-            // console.log('data snapshot', this.route.snapshot.queryParams['data'] );
+        } else if (this.route.snapshot.queryParams.data !== undefined ) {
+            console.log('APP - ngOnInit - data snapshot', this.route.snapshot.queryParams['data'] );
             try {
-                input_data = JSON.parse(this.route.snapshot.queryParams['data']);
-                // this.initData(input_data);
-                this.data =  Object.assign({}, this.data, input_data);
+                inputData = JSON.parse(this.route.snapshot.queryParams.data);
+                this.data = new Vozidla(inputData);
+                // this.data =  Object.assign({}, this.data, inputData);
             } catch (e) {
                 // console.log(e);
             }
         }
+        // volání o nové ID, vrací se i rychleji než jsou načtena data kalkulace, ale asi ničemu nevadí - jistota, že máme ID
+        if (!this.data.id ) {
+            this.paramsService.getNewId()
+            .subscribe( data => {
+                this.data.id = this.data.id ? this.data.id : data['id'];
+                // console.log('APP getNewId ', data);
+            });
+        }
         // console.log(this.zadaniForm.value);
     }
     ngOnDestroy() {
-        this.dataservice.data = this.data;
-        this.dataservice.vprodukt = this.vprodukt;
+        this.dataService.data = this.data;
+        this.dataService.vprodukt = this.vprodukt;
         this.valueChangesSubscriber['f'].unsubscribe();
         this.valueChangesSubscriber['z'].unsubscribe();
         this.valueChangesSubscriber['e'].unsubscribe();

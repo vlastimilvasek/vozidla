@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { LOGO_200x100 } from '../../assets/params/loga';
 
 @Component({
@@ -8,6 +8,9 @@ import { LOGO_200x100 } from '../../assets/params/loga';
 })
 export class KloaderComponent implements OnInit {
   LOGA = LOGO_200x100;
+  @Input() partners;
+  @Input() layout;
+
   constructor() { }
 
   ngOnInit() {

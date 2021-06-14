@@ -25,6 +25,7 @@ export const LOGO_200x100 = {
     'Sberbank': 'https://www.srovnavac.cz/images/loga/200x100/sberbank.png',
     'ČS': 'https://www.srovnavac.cz/images/loga/200x100/cs.png',
     'PVZP': 'https://www.srovnavac.cz/images/loga/200x100/pvzp.png',
-    'Pillow': 'https://www.srovnavac.cz/images/loga/200x100/pillow.png',    
-    'GCP': 'https://www.srovnavac.cz/images/loga/200x100/gcp.png'
+    'Pillow': 'https://www.srovnavac.cz/images/loga/200x100/pillow.png',
+    'Generali ČP': 'https://www.srovnavac.cz/images/loga/200x100/gcp.png',
+    'HVP': 'https://www.srovnavac.cz/images/loga/200x100/hvp.png'
 };
